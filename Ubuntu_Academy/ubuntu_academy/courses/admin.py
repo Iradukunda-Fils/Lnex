@@ -429,9 +429,6 @@ class CategoryAdmin(admin.ModelAdmin):
     course_count.short_description = 'Courses'
 
 
-
-
-
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
     list_display = (
@@ -458,7 +455,7 @@ class CourseAdmin(admin.ModelAdmin):
     )
     actions = ['publish_selected', 'unpublish_selected', 'feature_selected', 'unfeature_selected']
     fieldsets = (
-        (_('Basic Information'), {'fields': ('title', 'slug', 'short_description', 'description')}),
+        (_('Basic Information'), {'fields': ('title', 'slug', 'short_description', 'description', 'tags')}),
         (_('Classification'), {'fields': ('category', 'instructor', 'level', 'language'), 'classes': ('collapse',)}),
         (_('Pricing'), {'fields': ('price', 'is_free'), 'classes': ('collapse',)}),
         (_('Publication'), {'fields': ('is_published', 'published_at', 'is_featured'), 'classes': ('collapse',)}),
@@ -562,103 +559,6 @@ class CourseAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
 
-
-
-class TagsInline(admin.TabularInline):
-    model = Tag
-    extra = 1
-
-
-@admin.register(Tag)
-class TagAdmin(admin.ModelAdmin):
-    list_display = ('name', 'course_link', 'usage_count', 'colored_tag')
-    list_display_links = ('name',)
-    search_fields = ('name', 'course__title')
-    list_filter = ('course__category', 'course__level', 'course__language')
-    autocomplete_fields = ('course',)
-    
-    # Performance optimization
-    def get_queryset(self, request):
-        return super().get_queryset(request).select_related('course').annotate(
-            usage_count=Count('id')
-        )
-    
-    def course_link(self, obj):
-        """Display a link to the related course"""
-        if obj.course:
-            url = reverse('admin:courses_course_change', args=[obj.course.slug])
-            return format_html('<a href="{}">{}</a>', url, obj.course.title)
-        return "-"
-    course_link.short_description = _("Course")
-    course_link.admin_order_field = 'course__title'
-    
-    def usage_count(self, obj):
-        """Display how many times this tag is used"""
-        # This relies on the annotated queryset
-        return obj.usage_count
-    usage_count.short_description = _("Usage Count")
-    usage_count.admin_order_field = 'usage_count'
-    
-    def colored_tag(self, obj):
-        """Display the tag with a colored background"""
-        # Create a simple hash of the tag name to get a consistent color
-        hash_value = sum(ord(c) for c in obj.name) % 360
-        bg_color = f"hsl({hash_value}, 70%, 80%)"
-        text_color = "#000"
-        
-        return format_html(
-            '<span style="background-color: {}; color: {}; padding: 3px 8px; '
-            'border-radius: 12px; font-size: 0.9em;">{}</span>',
-            bg_color, text_color, obj.name
-        )
-    colored_tag.short_description = _("Tag Display")
-    
-    # Custom fieldsets
-    fieldsets = (
-        (None, {
-            'fields': ('name', 'course'),
-        }),
-    )
-    
-    # Auto-complete for course field
-    autocomplete_fields = ['course']
-    
-    # Actions
-    actions = ['merge_tags', 'copy_tags_to_selected_courses']
-    
-    def merge_tags(self, request, queryset):
-        """Merge selected tags into one"""
-        if queryset.count() <= 1:
-            self.message_user(request, "You need to select at least two tags to merge", level='error')
-            return
-            
-        # Implementation would merge tags, keeping the first one
-        # and updating all relationships to point to it
-        primary_tag = queryset.first()
-        tag_names = list(queryset.values_list('name', flat=True))
-        
-        # Display what would be merged
-        self.message_user(
-            request, 
-            f"Would merge tags: {', '.join(tag_names)} into '{primary_tag.name}'"
-        )
-    merge_tags.short_description = _("Merge selected tags")
-    
-    def copy_tags_to_selected_courses(self, request, queryset):
-        """Copy selected tags to multiple courses"""
-        # This would show a form to select target courses
-        # Then create new Tag objects with the same names for those courses
-        self.message_user(
-            request,
-            f"Selected {queryset.count()} tags. Use the form below to copy them to other courses."
-        )
-    copy_tags_to_selected_courses.short_description = _("Copy tags to other courses")
-    
-    # Inline for Course admin
-    class Meta:
-        model = Tag
-
-
 @admin.register(Module)
 class ModuleAdmin(admin.ModelAdmin):
     list_display = ('title', 'course', 'order', 'is_published', 'created_at')
@@ -676,23 +576,7 @@ class LessonAdmin(admin.ModelAdmin):
 
 
 
-# Register Tag as an inline for Course
-class TagInline(admin.TabularInline):
-    model = Tag
-    extra = 1
-    fields = ('name',)
     
-
-# Update the CourseAdmin to include TagInline
-class CourseAdmin(admin.ModelAdmin):
-    # ... existing CourseAdmin code ...
-    inlines = [TagInline]
-    
-
-# If you already registered Course elsewhere, unregister it first
-# admin.site.unregister(Course)
-# admin.site.register(Course, CourseAdmin)
-
 
 
 

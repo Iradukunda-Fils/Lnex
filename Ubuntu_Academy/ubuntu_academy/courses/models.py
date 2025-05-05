@@ -126,6 +126,15 @@ class Course(models.Model):
         default=False,
         db_index=True
         )
+    
+    tags = models.TextField(
+        _("Comma-separated list of tags for the course."),
+        max_length=500,
+        blank=True,
+        null=True,
+        db_index=True,
+        help_text=_("Use commas to separate tags. Example: python, django, web development")
+        )
 
     class Meta:
         verbose_name = _("Course")
@@ -167,7 +176,7 @@ class Course(models.Model):
     
     @property
     def get_tags(self):
-        return self.targs.values_list('tags', flat=True)
+        return self.tags.split(',') if self.tags else []
     
     # def publish(self):
     #     if self.published_at <= now():
@@ -175,19 +184,7 @@ class Course(models.Model):
     #         self.save()
 
 
-class Tag(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="tags")
-    name = models.CharField(max_length=50, null=True, blank=True)
 
-    class Meta:
-        verbose_name = _("Tag")
-        verbose_name_plural = _("Tags")
-        indexes = [
-            models.Index(fields=['name']),
-        ]
-
-    def __str__(self):
-        return self.name
     
 
 

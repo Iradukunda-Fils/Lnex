@@ -242,7 +242,7 @@ STATICFILES_DIRS = [BASE_DIR / "sys_statics/"]
 STATIC_ROOT = BASE_DIR / "collected_statics/"
 
 MEDIA_URL = '/media_files/'
-MEDIA_ROOT = BASE_DIR / "sys_media/media"
+MEDIA_ROOT = create_dir(BASE_DIR / "sys_media/media")
 
 FILE_UPLOAD_TEMP_DIR = create_dir(BASE_DIR / 'sys_media'/ 'media' / 'temp')
 
