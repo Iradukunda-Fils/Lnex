@@ -1,0 +1,127 @@
+2025-01-08 14:23:45,286 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/base.env
+2025-01-08 14:23:45,296 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/api_keys.env
+2025-01-08 14:23:45,305 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/db.env
+2025-01-08 14:23:45,320 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/services.env
+2025-01-08 14:23:45,332 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/secret_keys.env
+2025-01-08 12:23:54,631 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/base.env
+2025-01-08 12:23:54,640 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/api_keys.env
+2025-01-08 12:23:54,649 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/db.env
+2025-01-08 12:23:54,660 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/services.env
+2025-01-08 12:23:54,670 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/secret_keys.env
+2025-01-08 12:24:01,425 [INFO] Watching for file changes with StatReloader
+2025-01-08 14:24:33,189 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/base.env
+2025-01-08 14:24:33,196 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/api_keys.env
+2025-01-08 14:24:33,204 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/db.env
+2025-01-08 14:24:33,212 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/services.env
+2025-01-08 14:24:33,223 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/secret_keys.env
+2025-01-08 12:24:44,600 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/base.env
+2025-01-08 12:24:44,608 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/api_keys.env
+2025-01-08 12:24:44,616 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/db.env
+2025-01-08 12:24:44,624 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/services.env
+2025-01-08 12:24:44,634 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/secret_keys.env
+2025-01-08 12:24:49,324 [INFO] Watching for file changes with StatReloader
+2025-01-08 12:25:36,257 [INFO] /mnt/d/DRT/Authentication-Service/authentication/conf/settings.py changed, reloading.
+2025-01-08 12:25:37,675 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/base.env
+2025-01-08 12:25:37,680 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/api_keys.env
+2025-01-08 12:25:37,685 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/db.env
+2025-01-08 12:25:37,690 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/services.env
+2025-01-08 12:25:37,695 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/secret_keys.env
+2025-01-08 12:25:42,386 [INFO] Watching for file changes with StatReloader
+2025-01-08 14:26:31,233 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/base.env
+2025-01-08 14:26:31,240 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/api_keys.env
+2025-01-08 14:26:31,247 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/db.env
+2025-01-08 14:26:31,252 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/services.env
+2025-01-08 14:26:31,258 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/secret_keys.env
+2025-01-08 12:26:40,199 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/base.env
+2025-01-08 12:26:40,206 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/api_keys.env
+2025-01-08 12:26:40,214 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/db.env
+2025-01-08 12:26:40,221 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/services.env
+2025-01-08 12:26:40,230 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/secret_keys.env
+2025-01-08 12:26:44,860 [INFO] Watching for file changes with StatReloader
+2025-01-08 14:36:31,819 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/base.env
+2025-01-08 14:36:31,828 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/api_keys.env
+2025-01-08 14:36:31,841 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/db.env
+2025-01-08 14:36:31,850 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/services.env
+2025-01-08 14:36:31,859 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/secret_keys.env
+2025-01-08 12:36:41,902 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/base.env
+2025-01-08 12:36:41,911 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/api_keys.env
+2025-01-08 12:36:41,920 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/db.env
+2025-01-08 12:36:41,928 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/services.env
+2025-01-08 12:36:41,936 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/secret_keys.env
+2025-01-08 12:36:46,947 [INFO] Watching for file changes with StatReloader
+2025-01-08 15:12:57,700 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/base.env
+2025-01-08 15:12:57,710 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/api_keys.env
+2025-01-08 15:12:57,720 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/db.env
+2025-01-08 15:12:57,731 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/services.env
+2025-01-08 15:12:57,741 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/secret_keys.env
+2025-01-08 13:13:12,595 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/base.env
+2025-01-08 13:13:12,608 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/api_keys.env
+2025-01-08 13:13:12,621 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/db.env
+2025-01-08 13:13:12,632 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/services.env
+2025-01-08 13:13:12,649 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/secret_keys.env
+2025-01-08 15:13:22,690 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/base.env
+2025-01-08 15:13:22,698 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/api_keys.env
+2025-01-08 15:13:22,707 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/db.env
+2025-01-08 15:13:22,721 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/services.env
+2025-01-08 15:13:22,728 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/secret_keys.env
+2025-01-08 13:13:36,962 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/base.env
+2025-01-08 13:13:36,972 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/api_keys.env
+2025-01-08 13:13:36,983 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/db.env
+2025-01-08 13:13:36,993 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/services.env
+2025-01-08 13:13:37,004 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/secret_keys.env
+2025-01-08 13:13:46,074 [INFO] Watching for file changes with StatReloader
+2025-01-08 15:16:12,748 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/base.env
+2025-01-08 15:16:12,754 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/api_keys.env
+2025-01-08 15:16:12,760 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/db.env
+2025-01-08 15:16:12,766 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/services.env
+2025-01-08 15:16:12,772 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/secret_keys.env
+2025-01-08 13:16:21,887 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/base.env
+2025-01-08 13:16:21,893 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/api_keys.env
+2025-01-08 13:16:21,900 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/db.env
+2025-01-08 13:16:21,906 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/services.env
+2025-01-08 13:16:21,912 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/secret_keys.env
+2025-01-08 13:16:29,221 [INFO] Watching for file changes with StatReloader
+2025-01-08 15:59:28,096 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/base.env
+2025-01-08 15:59:28,105 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/api_keys.env
+2025-01-08 15:59:28,111 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/db.env
+2025-01-08 15:59:28,118 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/services.env
+2025-01-08 15:59:28,124 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/secret_keys.env
+2025-01-08 13:59:36,076 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/base.env
+2025-01-08 13:59:36,082 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/api_keys.env
+2025-01-08 13:59:36,087 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/db.env
+2025-01-08 13:59:36,093 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/services.env
+2025-01-08 13:59:36,099 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/secret_keys.env
+2025-01-08 13:59:41,662 [INFO] Watching for file changes with StatReloader
+2025-01-08 15:59:53,997 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/base.env
+2025-01-08 15:59:54,003 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/api_keys.env
+2025-01-08 15:59:54,010 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/db.env
+2025-01-08 15:59:54,017 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/services.env
+2025-01-08 15:59:54,027 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/secret_keys.env
+2025-01-08 13:59:58,654 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/base.env
+2025-01-08 13:59:58,659 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/api_keys.env
+2025-01-08 13:59:58,665 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/db.env
+2025-01-08 13:59:58,672 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/services.env
+2025-01-08 13:59:58,678 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/secret_keys.env
+2025-01-08 14:00:01,547 [INFO] Watching for file changes with StatReloader
+2025-01-08 16:00:12,529 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/base.env
+2025-01-08 16:00:12,536 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/api_keys.env
+2025-01-08 16:00:12,542 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/db.env
+2025-01-08 16:00:12,551 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/services.env
+2025-01-08 16:00:12,556 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/secret_keys.env
+2025-01-08 14:00:20,433 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/base.env
+2025-01-08 14:00:20,440 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/api_keys.env
+2025-01-08 14:00:20,448 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/db.env
+2025-01-08 14:00:20,455 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/services.env
+2025-01-08 14:00:20,468 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/secret_keys.env
+2025-01-08 14:00:26,000 [INFO] Watching for file changes with StatReloader
+2025-01-08 16:05:08,323 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/base.env
+2025-01-08 16:05:08,331 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/api_keys.env
+2025-01-08 16:05:08,339 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/db.env
+2025-01-08 16:05:08,345 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/services.env
+2025-01-08 16:05:08,349 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/secret_keys.env
+2025-01-08 14:05:15,386 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/base.env
+2025-01-08 14:05:15,391 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/api_keys.env
+2025-01-08 14:05:15,397 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/db.env
+2025-01-08 14:05:15,408 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/services.env
+2025-01-08 14:05:15,419 [INFO] Loaded environment variables from /mnt/d/DRT/Authentication-Service/authentication/conf/ENV/development/secret_keys.env
+2025-01-08 14:05:20,863 [INFO] Watching for file changes with StatReloader
