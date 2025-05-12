@@ -22,7 +22,7 @@ env = environ.Env(
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 TEMPLATES = (
     BASE_DIR / "templates",
@@ -133,7 +133,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'ubuntu_academy.urls'
+ROOT_URLCONF = 'learn_service.urls'
 
 TEMPLATES = [
     {
@@ -152,7 +152,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'ubuntu_academy.wsgi.application'
+WSGI_APPLICATION = 'learn_service.wsgi.application'
 
 
 # Database
@@ -237,11 +237,11 @@ for code, _ in LANGUAGES:
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = '/ubuntu_statics/'
+STATIC_URL = '/learn_statics/'
 STATICFILES_DIRS = [BASE_DIR / "sys_statics/"]
 STATIC_ROOT = BASE_DIR / "collected_statics/"
 
-MEDIA_URL = '/media_files/'
+MEDIA_URL = '/learn_files/'
 MEDIA_ROOT = create_dir(BASE_DIR / "sys_media/media")
 
 FILE_UPLOAD_TEMP_DIR = create_dir(BASE_DIR / 'sys_media'/ 'media' / 'temp')

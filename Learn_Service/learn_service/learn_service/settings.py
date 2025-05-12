@@ -67,7 +67,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'ubuntu_academy.wsgi.application'
+WSGI_APPLICATION = 'learn_service.wsgi.application'
 
 
 # Database
