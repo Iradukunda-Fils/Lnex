@@ -30,7 +30,7 @@ TEMPLATES = (
 
 LOG = create_dir(BASE_DIR / "config/logs")
 
-
+    
 
 LOGGING = SysLogging(**creating_loging_config(LOG)).get_logger()
 
