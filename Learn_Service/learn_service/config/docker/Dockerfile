@@ -3,7 +3,8 @@ FROM python:3.11 AS dev_stage
 # Set the working directory
 WORKDIR /d_app
 # Copy the requirements file into the container
-COPY requirements.txt ../../../
+COPY uv.lock pyproject.toml ./
+
 # Install the dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application code into the container
@@ -18,6 +19,9 @@ FROM python:3.11-slim AS prod_stage
 WORKDIR /p_app
 
 COPY --from=dev_stage /d_app /p_app
+
+# Install FFmpeg (Ubuntu-based)
+RUN apt-get update && apt-get install -y ffmpeg
 
 #Install python the dependencies
 RUN pip install --no-cache-dir -r requirements.txt

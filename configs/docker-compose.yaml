@@ -1,0 +1,91 @@
+version: '3.9'
+
+services:
+  auth:
+    build:
+      context: ../Auth_Service
+      dockerfile: auth_service/config/docker/Dockerfile
+    image: auth-service:v_1.0
+    container_name: auth_service
+    expose:
+      - "1111"
+    depends_on:
+      - auth_db
+    networks:
+      - shared_network
+      - auth_db_network
+  
+  learn:
+    build:
+      context: ../Learn_Service
+      dockerfile: learn_service/config/docker/Dockerfile
+    image: learn-service:v_1.0
+    container_name: learn_service
+    expose:
+      - "2222"
+    depends_on:
+      - learn_db
+    networks:
+      - shared_network
+      - learn_db_network
+  payment:
+    build: 
+      context: ../Payment_Service
+      dockerfile: payment_service/config/docker/Dockerfile
+    image: payment-service:v_1.0
+    container_name: payment_service
+    expose:
+      - "3333"
+    depends_on:
+      - payment_db
+    networks:
+      - shared_network
+      - learn_db_network
+
+
+  auth_db:
+    image: postgres:17
+    container_name: auth_db
+    env_file:
+      - ${D_AUTH_DB_PATH}
+    ports:
+      - "1111:5432"
+    volumes:
+      - ./db/posrgres/data/auth_db_data:/var/lib/postgresql/data:rw
+    networks:
+      - shared_network
+      - auth_db_network
+  
+  learn_db:
+    image: postgres:17
+    container_name: learn_db
+    env_file:
+      - ${D_LEARN_DB_PATH}
+    ports:
+      - "2222:5432"
+    volumes:
+      - ./db/posrgres/data/learn_db_data:/var/lib/postgresql/data:rw
+    networks:
+      - shared_network
+      - learn_db_network
+
+
+  payment_db:
+    image: postgres:17
+    container_name: payment_db
+    env_file:
+      - ${D_PAYMENT_DB_PATH}
+    ports:
+      - "3333:5432"
+    volumes:
+      - ./db/posrgres/data/payment_db_data:/var/lib/postgresql/data:rw
+    networks:
+      - shared_network
+      - payment_db_network
+      
+networks:
+  shared_network:
+  auth_db_network:
+  learn_db_network:
+  payment_db_network:
+    

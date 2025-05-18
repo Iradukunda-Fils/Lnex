@@ -28,7 +28,7 @@ TEMPLATES = (
     BASE_DIR / "templates",
 )
 
-LOG = create_dir(BASE_DIR / "config/logs")
+LOG = create_dir(BASE_DIR / "../../" / "configs/logs/services/payment_service")
 
 
 
@@ -91,7 +91,9 @@ ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS if host.strip()]
 
 INSTALLED_APPS = [
     #Configurations
-    'config.apps.ConfigurationsConfig',
+    'config.main.apps.ConfigurationsConfig',
+    'sys_media.apps.SysMediaConfig',
+    'utils.apps.UtilsConfig',
     
     #System Apps
     'utils.apps.UtilsConfig',

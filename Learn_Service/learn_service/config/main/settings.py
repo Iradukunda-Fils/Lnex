@@ -28,15 +28,13 @@ TEMPLATES = (
     BASE_DIR / "templates",
 )
 
-LOG = create_dir(BASE_DIR / "config/logs")
+LOG = create_dir(BASE_DIR / "../../" / "configs/logs/services/learn_service")
 
     
 
 LOGGING = SysLogging(**creating_loging_config(LOG)).get_logger()
 
 settings_log = logging.getLogger('settings')
-
-# settings_log = logging.getLogger('settings')
 
 
 # Load the main .env file
@@ -91,7 +89,7 @@ ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS if host.strip()]
 
 INSTALLED_APPS = [
     #Configurations
-    'config.apps.ConfigurationsConfig',
+    'config.main.apps.ConfigurationsConfig',
     
     #System Apps
     'home.apps.HomeConfig',
