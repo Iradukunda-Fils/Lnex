@@ -1,91 +1,253 @@
 version: '3.9'
 
 services:
+
+# ========================================================> MICRO SERVICE MANAGER <================================================ #
+  micro:
+    build:
+      context: ../Micro-Service
+      dockerfile: ../Micro-Service/micro_service/config/docker/Dockerfile
+    image: lnex-micro-service:v_1.0
+    container_name: lnex-auth-service
+    expose:
+      - "8000"
+    depends_on:
+      - micro_db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - lnex_static_volume:app/system_static/micro:rw
+      - lnex_media_volume:app/sys_media/media/micro:rw
+    networks:
+      - lnex_shared_network
+      - lnex_micro_db_network
+   
+    # DATABASE
+
+  micro_db:
+    image: postgres:17
+    container_name: lnex-micro-db
+    env_file:
+      - ${D_MICRO_DB_PATH}
+    ports:
+      - "1111:5432"
+    volumes:
+      - lnex_micro_db_data:/var/lib/postgresql/data:rw
+      - ./init/micro:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "micro_user", "-p", "5432"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - lnex_micro_db_network
+
+# ========================================================> AUTHENTICATION SERVICE <================================================ #
   auth:
     build:
-      context: ../Auth_Service
-      dockerfile: auth_service/config/docker/Dockerfile
-    image: auth-service:v_1.0
-    container_name: auth_service
+      context: ../Auth-Service
+      dockerfile: ../Auth-Service/auth_service/config/docker/Dockerfile
+    image: lnex-auth-service:v_1.0
+    container_name: lnex-auth-service
     expose:
-      - "1111"
+      - "8000"
     depends_on:
       - auth_db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - lnex_static_volume:app/system_static/authentication:rw
+      - lnex_media_volume:app/sys_media/media/authentication:rw
     networks:
-      - shared_network
-      - auth_db_network
-  
-  learn:
-    build:
-      context: ../Learn_Service
-      dockerfile: learn_service/config/docker/Dockerfile
-    image: learn-service:v_1.0
-    container_name: learn_service
-    expose:
-      - "2222"
-    depends_on:
-      - learn_db
-    networks:
-      - shared_network
-      - learn_db_network
-  payment:
-    build: 
-      context: ../Payment_Service
-      dockerfile: payment_service/config/docker/Dockerfile
-    image: payment-service:v_1.0
-    container_name: payment_service
-    expose:
-      - "3333"
-    depends_on:
-      - payment_db
-    networks:
-      - shared_network
-      - learn_db_network
-
+      - lnex_shared_network
+      - lnex_auth_db_network
+   
+    # DATABASE
 
   auth_db:
     image: postgres:17
-    container_name: auth_db
+    container_name: lnex-auth-db
     env_file:
       - ${D_AUTH_DB_PATH}
     ports:
       - "1111:5432"
     volumes:
-      - ./db/posrgres/data/auth_db_data:/var/lib/postgresql/data:rw
+      - lnex_auth_db_data:/var/lib/postgresql/data:rw
+      - ./init/auth:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "auth_user", "-p", "5432"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
     networks:
-      - shared_network
-      - auth_db_network
+      - lnex_auth_db_network
+    
+# =========================================================> LEARNING SERVICE <===================================================== #
   
+  learn:
+    build:
+      context: ../Learn-Service
+      dockerfile: ../Learn-Service/learn_service/config/docker/Dockerfile
+    image: lnex-learn-service:v_1.0
+    container_name: lnex-learn-service
+    expose:
+      - "8000"
+    depends_on:
+      - learn_db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - lnex_static_volume:app/sys_static/learn:rw
+      - lnex_media_volume:app/sys_media/media/learn:rw
+    networks:
+      - lnex_shared_network
+      - lnex_learn_db_network
+
+      # DATABASE
+
   learn_db:
     image: postgres:17
-    container_name: learn_db
+    container_name: lnex-learn-db
     env_file:
       - ${D_LEARN_DB_PATH}
     ports:
       - "2222:5432"
     volumes:
-      - ./db/posrgres/data/learn_db_data:/var/lib/postgresql/data:rw
+      - lnex_learn_db_data:/var/lib/postgresql/data:rw
+      - ./init/learn:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "learn_user", "-p", "5432"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
     networks:
-      - shared_network
-      - learn_db_network
+      - lnex_learn_db_network
 
+# =========================================================> PAYMENT SERVICE <====================================================== #
+
+  payment:
+    build: 
+      context: ../Payment-Service
+      dockerfile: ../Payment-Service/payment_service/config/docker/Dockerfile
+    image: lnex-payment-service:v_1.0
+    container_name: lnex-payment-service
+    expose:
+      - "8000"
+    depends_on:
+      - payment_db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - lnex_static_volume:app/sys_static/payment:rw
+      - lnex_media_volume:app/sys_media/media/payment:rw
+    networks:
+      - lnex_shared_network
+      - lnex_payment_db_network
+
+    # DATABASE
 
   payment_db:
     image: postgres:17
-    container_name: payment_db
+    container_name: lnex-payment-db
     env_file:
       - ${D_PAYMENT_DB_PATH}
     ports:
       - "3333:5432"
     volumes:
-      - ./db/posrgres/data/payment_db_data:/var/lib/postgresql/data:rw
+      - lnex_payment_db_data:/var/lib/postgresql/data:rw
+      - ./init/payment:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "payment_user", "-p", "5432"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
     networks:
-      - shared_network
-      - payment_db_network
+      - lnex_payment_db_network
+
+# =========================================================> MAILING SERVICE <====================================================== #
+
+  mailing:
+    build: 
+      context: ../Mailing-Service
+      dockerfile: ../Mailing-Service/mailing_service/config/docker/Dockerfile
+    image: lnex-mailing-service:v_1.0
+    container_name: lnex-mailing-service
+    expose:
+      - "8000"
+    depends_on:
+      - mailing_db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - lnex_static_volume:app/sys_static/mailing:rw
+      - lnex_media_volume:app/sys_media/media/mailing:rw
+    networks:
+      - lnex_shared_network
+      - lnex_mailing_db_network
+
+    # DATABASE
+
+  mailing_db:
+    image: postgres:17
+    container_name: lnex-mailing-db
+    env_file:
+      - ${D_MAILING_DB_PATH}
+    ports:
+      - "3333:5432"
+    volumes:
+      - lnex_mailing_db_data:/var/lib/postgresql/data:rw
+      - ./init/mailing:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "mailing_user", "-p", "5432"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - lnex_mailing_db_network
+
+# ===============================================================> MANAGE SERVICES <================================================ #
+
+volumes:
+  lnex_micro_db_data:
+  lnex_auth_db_data:
+  lnex_learn_db_data:
+  lnex_payment_db_data:
+  lnex_mailing_db_data:
+  lnex_static_volume:
+  lnex_media_volume:
       
 networks:
-  shared_network:
-  auth_db_network:
-  learn_db_network:
-  payment_db_network:
+  lnex_micro_network:
+    driver: bridge
+  lnex_shared_network:
+    driver: bridge
+  lnex_auth_db_network:
+    driver: bridge  
+  lnex_learn_db_network:
+    driver: bridge
+  lnex_payment_db_network:
+    driver: bridge
+  lnex_mailing_db_network:
+    driver: bridge
+
     

@@ -1,0 +1,2884 @@
+{% load i18n %}
+{% load static %}
+{% get_current_language as CURRENT_LANG%}
+{% get_available_languages as LANGUAGES %}
+{% comment %} {% get_language_info_list for LANGUAGES as languages %}  {% endcomment %}
+<!DOCTYPE html>
+<html lang="{{ CURRENT_LANG }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toggle Search Navigation</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <style>
+        /* Existing Variables - Analysis */
+:root {
+    --primary-color:rgb(215, 147, 0);
+    --text-color: #030303;          /* Optimal text contrast (98% black) */
+    --icon-color: #606060;          /* Accessible medium gray (AA compliant) */
+    --background-color: #ffffff;    /* Clean canvas (consider soft white) */
+    --search-border: #ccc;       /* Low-contrast border (improve visibility) */
+    --search-button: #d1d1d1;       /* Needs visual hierarchy */
+    --border-color: #cccccc;        /* Consistent with search border */
+    --sidebar-hover: rgba(0,0,0,0.05); /* Subtle interaction feedback */
+    --body-background: whitesmoke;
+}
+
+/* Proposed Additions */
+:root {
+    --primary-hover: #cc0000;       /* 20% darker red */
+    --primary-active: #990000;      /* 40% darker red */
+    --surface-color: #f8f9fa;       /* New: Soft background alternative */
+    --success-color: #28a745;       /* For positive actions */
+    --warning-color: #ffc107;       /* Attention-needed states */
+    --error-color: #dc3545;         /* Enhanced error visibility */
+    --link-color: #007bff;          /* Standard web blue */
+}
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+.main-content{
+    width: 100%;
+    margin-top: 10px;
+    float: right;
+}
+
+    /* Update existing body style */
+    body {
+     padding-top: 56px;
+     font-family: Arial, sans-serif;
+     background-color: var(--body-background);
+    }
+    body::-webkit-scrollbar {
+        width: 10px; /* Adjust width as needed */
+        background-color: transparent; /* Or a subtle background color */
+    }
+    
+    body::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.3); /* Subtle color for the thumb */
+        border-radius: 4px; /* Rounded corners */
+    }
+    
+    body::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(0, 0, 0, 0.5); /* Slightly darker on hover */
+    }
+
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 55px;
+            background: var(--background-color);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            gap: 16px;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.08); /* Softer border */  
+        }
+
+        .nav-bar .nav-section {
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        .nav-bar .left-section {
+            flex: 0 0 20%;
+            justify-content: flex-start;
+            gap: 10px;
+        }
+
+        .nav-bar .center-section {
+            flex: 0 0 60%;
+            justify-content: center;
+        }
+
+        .nav-bar .right-section {
+            flex: 0 0 10%;
+            justify-content: flex-end;
+            gap: 30px;
+        }
+
+        .nav-bar .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-bar .logo {
+            height: 30px;
+            border-radius: 5px;
+        }
+
+        .nav-bar .logo-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .nav-bar .search-container {
+            display: flex;
+            width: 100%;
+            max-width: 600px;
+            transition: all 0   .3s ease;
+            padding: 10px;
+        }
+
+        .nav-bar .search-input {
+            flex: 1;
+            padding: 0 16px;
+            border: 1px solid var(--search-border);
+            border-radius: 20px 0 0 20px;
+            font-size: 16px;
+            outline: none;
+            width: 100%;
+            height: 40px;
+        }   
+
+        .nav-bar .search-button.icon-button {
+            height: 40px;
+            width: 50px;
+            border: 1px solid var(--search-border);
+            border-left: none;
+            border-radius: 0 20px 20px 0;
+            border: 1px solid #ccc; 
+            cursor: pointer;  
+        }
+        .nav-bar .search-button.icon-button:hover {
+            background: linear-gradient(to bottom, var(--search-button), #e0e0e0);
+            border: var(--search-border);
+            border-top-left-radius: 0px;
+            border-bottom-left-radius: 0px;
+            border-top-right-radius: 50%;
+            border-bottom-right-radius: 50%;
+        }
+
+        .nav-bar .icon-button {
+            position: relative;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--icon-color);
+            border-radius: 50%;
+            transition: background-color 0.1s;
+        }
+        .nav-bar #menu:hover{
+            background: none;
+            
+        }
+        .nav-bar #line-menu:hover{
+            width: 45%;
+            height: 45px;
+            border-radius: calc(50%);
+            padding: 5px;
+            background: linear-gradient(to bottom, var(--search-button), #e0e0e0)
+        }
+
+
+        .nav-bar .icon-button:hover {
+            background: linear-gradient(to bottom, var(--search-button), #e0e0e0);
+            border-radius: calc(50%);
+        }
+        .nav-bar #profile-header:hover {
+            background: none;
+        }
+
+        
+
+        .nav-bar .mobile-search-button {
+            display: none;
+        }
+
+        .nav-bar .notification-badge {
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            background: var(--error-color); /* Use error color for notifications */
+            color: white;
+            font-size: 10px;
+            min-width: 16px;
+            height: 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            border: 2px solid var(--background-color);
+        }
+
+        .profile-picture {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-left: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .nav-bar .center-section {
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 1;
+                padding: 16px;
+                z-index: 999;
+                display: none;
+                height: 56px;
+            }
+            .nav-bar .right-section {
+                gap: 20px
+            }
+
+
+            .nav-bar .center-section.active {
+                display: flex;
+            }
+            
+
+            .nav-bar .mobile-search-button {
+                display: block;
+            }
+
+            
+
+            .nav-bar.search-active .left-section,
+            .nav-bar.search-active .right-section {
+                display: none;
+            }
+
+            .nav-bar .search-container {
+                max-width: 100%;
+            }
+        }
+
+        .nav-bar .lang-selector {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-bar .lang-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--background-color);
+            border: 1px solid var(--search-border);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: none;
+            min-width: 120px;
+            z-index: 1001;
+            margin-top: 8px;
+        }
+
+        .nav-bar .lang-dropdown.show {
+            display: block;
+        }
+
+        .nav-bar .lang-option {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .nav-bar .lang-option:hover {
+            background-color: var(--search-button);
+        }
+
+        .nav-bar .lang-option[aria-selected="true"] {
+            background-color: var(--search-button);
+            font-weight: 500;
+        }
+
+        .nav-bar .country-code {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--icon-color);
+            margin-left: 4px;
+        }
+
+        /* Add these new styles */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 55px;
+            bottom: 0;
+            width: 300px;
+            background: var(--background-color);
+            border-top: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 998;
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidebar-content {
+            padding: 20px;
+        }
+
+        .sidebar-section {
+            margin-bottom: 24px;
+        }
+
+        .sidebar-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-color);
+            margin-bottom: 12px;
+            padding-left: 8px;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+            gap: 12px;
+            font-size: small;
+            margin-top: 10px;
+        }
+
+        .sidebar-link:hover {
+            background-color: var(--sidebar-hover);
+        }
+
+        .sidebar-link .material-icons-outlined {
+            font-size: 18px;
+        }
+
+         /* Add dropdown styles */
+         .sidebar-dropdown {
+            position: relative;
+        }
+    
+        .sidebar-dropdown .dropdown-toggle::after {
+            content: "chevron_right";
+            font-family: 'Material Icons Outlined';
+            font-size: 18px;
+            float: right;
+            transition: transform 0.2s;
+        }
+    
+        .sidebar-dropdown:hover .dropdown-toggle::after {
+            transform: rotate(90deg);
+        }
+    
+        .dropdown-menu {
+            display: none;
+            padding-left: 24px;
+        }
+    
+        .sidebar-dropdown:hover .dropdown-menu {
+            display: block;
+        }
+    
+        .dropdown-item {
+            padding: 8px 16px;
+            font-size: 14px;
+            color: var(--text-color);
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.2s;
+        }
+    
+        .dropdown-item:hover {
+            background-color: var(--sidebar-hover);
+        }
+
+        .main-content {
+            right: 0;
+            left: 0;
+            margin-left: 0;
+            transition: margin-left 0.3s ease;
+            padding: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .sidebar {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 240px;
+            }
+        }
+
+  /* Add these new styles */
+  .user-sidebar {
+    position: fixed;
+    right: -350px;
+    top: 55px;
+    bottom: 4;
+    width: 350px;
+    background: var(--background-color);
+    border: 1px solid var(--border-color);
+    transition: right 0.3s ease;
+    z-index: 997;
+    padding: 16px;
+    border-radius: 10px;
+}
+
+.user-sidebar.active {
+    right: 0;
+}
+
+.user-sidebar .user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    border-bottom: 1px solid var(--search-border);
+    margin-bottom: 16px;
+}
+
+.user-sidebar .user-options {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.user-sidebar .user-option {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    gap: 16px;
+    color: var(--text-color);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+    font-size: small;
+    height: 35px;
+}
+
+.user-sidebar .user-option:hover {
+    background-color: rgba(0,0,0,0.05);
+}
+
+.user-sidebar .user-option .material-icons-outlined {
+    font-size: 20px;
+    width: 24px;
+}
+
+
+@media (max-width: 600px) {
+    .user-sidebar .user-sidebar {
+        width: 50%;
+        right: -100%;
+    }
+}
+
+
+
+    /* Enhanced Video Card Styles */
+    :root {
+        --muted-color: #707070;
+        --accent-color: #4361ee;
+        --success-color: #4CAF50;
+        --warning-color: #FFC107;
+        --highlight-color: #f72585;
+        --border-color: #e0e0e0;
+        --shadow-color: rgba(0,0,0,0.1);
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --background-color: #121212;
+            --text-color: #f2f2f2;
+            --muted-color: #aaaaaa;
+            --border-color: #333333;
+            --shadow-color: rgba(0,0,0,0.3);
+        }
+    }
+
+
+
+   
+                                                                                                                                                                  
+    .video-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        gap: 24px;
+        max-width: 100%;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+
+    }
+
+    .video-card {
+        background: var(--body-background);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+        border-radius: 12px;
+        overflow: hidden;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        position: relative;
+        {% comment %} border: 1px solid var(--search-border); {% endcomment %}
+        
+    }
+
+    {% comment %} .video-card:hover {
+        box-shadow: 0 2px 6px var(--shadow-color);
+    } {% endcomment %}
+
+    .thumbnail-container {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16/9;
+        overflow: hidden;
+        background-color: black
+    }
+
+    .thumbnail {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .video-card:hover .thumbnail {
+        transform: scale(1.05);
+    }
+
+    .course-type {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        background: var(--accent-color);
+        color: white;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        z-index: 2;
+    }
+
+    .free-tag {
+        background: var(--success-color);
+    }
+
+    .premium-tag {
+        background: var(--highlight-color);
+    }
+
+    .bestseller-tag {
+        background: var(--warning-color);
+        color: #000;
+    }
+
+    .enrollment-status {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: rgba(0,0,0,0.8);
+        color: white;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 500;
+        z-index: 2;
+    }
+
+    .channel-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        
+    }
+    .progress-text {
+        font-size: 12px;
+        color: var(--muted-color);
+        margin-top: 4px;
+        text-align: right;
+      }
+
+    .duration {
+        position: absolute;
+        bottom: 12px;
+        right: 12px;
+        background: rgba(0,0,0,0.8);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .video-details {
+        display: flex;
+        gap: 12px;
+        padding: 16px;
+        position: relative;
+    }
+
+    .channel-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        background-color: #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .icon-image {
+        width: 24px;
+        height: 24px;
+        color: #555;
+    }
+
+    .video-info {
+        flex: 1;
+    }
+
+    .video-title {
+        color: var(--text-color);
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 1.4;
+        margin-bottom: 4px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .instructor-name {
+        color: var(--muted-color);
+        font-size: 14px;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .members-icon {
+        width: 16px;
+        height: 16px;
+        vertical-align: middle;
+    }
+
+    .course-meta {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 8px;
+        color: var(--muted-color);
+        font-size: 13px;
+    }
+
+    .difficulty {
+        font-size: 12px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        background: #2196F3;
+        color: white;
+    }
+
+    .beginner {
+        background: #4CAF50;
+    }
+
+    .intermediate {
+        background: #2196F3;
+    }
+
+    .advanced {
+        background: #F44336;
+    }
+
+    .expert {
+        background: #9C27B0;
+    }
+
+    .rating {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        color:var(--primary-color);
+    }
+
+    .price {
+        font-weight: 600;
+        color: var(--highlight-color);
+    }
+
+    .progress-container {
+        padding: 0 16px 16px;
+    }
+
+    .progress-bar {
+        height: 4px;
+        background: #eee;
+        border-radius: 2px;
+        overflow: hidden;
+    }
+
+    .progress {
+        height: 100%;
+        background: var(--accent-color);
+        border-radius: 2px;
+        transition: width 0.3s ease;
+    }
+
+    .separator {
+        margin: 0 4px;
+        color: var(--muted-color);
+    }
+
+    .published-date {
+        color: var(--muted-color);
+        font-size: 13px;
+    }
+
+    .instructor-actions {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        display: flex;
+        gap: 8px;
+    }
+
+    .action-button {
+        padding: 4px 8px;
+        background: rgba(0,0,0,0.7);
+        color: white;
+        border-radius: 4px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .action-button:hover {
+        background: rgba(0,0,0,0.9);
+    }
+
+    .hover-stats {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0,0,0,0.8);
+        color: white;
+        padding: 8px 12px;
+        font-size: 12px;
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .video-card:hover .hover-stats {
+        transform: translateY(0);
+    }
+
+    .engagement {
+        display: flex;
+        gap: 12px;
+    }
+
+    .stat {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .badge {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        background: var(--highlight-color);
+        color: white;
+        width: 18px;
+        height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-size: 10px;
+        font-weight: bold;
+    }
+
+    /* Additional styles for different card states */
+    .new-course .video-title::after {
+        content: "NEW";
+        font-size: 10px;
+        background: var(--highlight-color);
+        color: white;
+        padding: 2px 4px;
+        border-radius: 4px;
+        margin-left: 8px;
+        vertical-align: middle;
+    }
+
+    .recommended-course::before {
+        content: "Recommended for you";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: var(--accent-color);
+        color: white;
+        text-align: center;
+        padding: 4px;
+        font-size: 12px;
+        font-weight: 500;
+        z-index: 3;
+    }
+
+    .popular-course::after {
+        content: "🔥 Hot & Popular";
+        position: absolute;
+        bottom: 12px;
+        left: 12px;
+        background: rgba(0,0,0,0.8);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        z-index: 2;
+    }
+
+
+    /* Updated Filters */
+    .filters-scroll-container .filters-container {
+        padding: 8px 10px;
+        overflow-x: auto;
+        scrollbar-width: none; /* Hide scrollbar Firefox */
+        -ms-overflow-style: none; /* Hide scrollbar IE */
+    }
+
+    .filters-scroll-container .filters-container::-webkit-scrollbar {
+        display: none; /* Hide scrollbar Chrome/Safari */
+    }
+
+    .filters-scroll-container .filters-container .filter-group {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        width: max-content;
+    }
+
+    .filters-scroll-container .filters-container .filter-btn {
+        padding: 10px 14px;
+        border: 1px solid #000;
+        border-radius: 10px;
+        border: 1px solid var(--search-border);
+        font-size: small;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+        background: var( --search-button);
+    }
+
+    .filters-scroll-container .filters-container .filter-btn.active {
+        background: black;
+        color: whitesmoke;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .filters-scroll-container .filters-container .filter-btn.active:hover{
+        background-color: var( --search-button);
+    }
+
+    .filters-scroll-container .filters-container .filter-btn:hover {
+        color: black;
+        border-color: black;
+    }
+    /* Scroll Controls Container */
+    .filters-scroll-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 32px;
+        max-width: 90%;
+        margin: 0 auto;
+    }
+
+    /* Scroll Buttons */
+    .filters-scroll-container .scroll-control {
+        flex-shrink: 0;
+        width: 36px;
+        height: 36px;
+        border: none;
+        border-radius: 50%;
+        background: var(--background-color);
+        box-shadow: 5px 5px 10px rgba(0,0,0,0.1);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .filters-scroll-container .scroll-control:hover {
+        background: var(--search-button);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        transform: scale(1.05);
+    }
+    crollLeft
+
+    .filters-scroll-container .scroll-control:active {
+        transform: scale(0.95);
+    }
+
+    .scroll-control .material-icons-outlined {
+        font-size: 24px;
+        color: var(--text-color);
+    }
+
+    /* Filters Container Adjustments */
+    .filters-scroll-container .filters-container {
+        flex: 1;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        padding: 8px 0;
+        mask-image: linear-gradient(
+            to right,
+            transparent 0%,
+            black 15px,
+            black calc(100% - 15px),
+            transparent 100%
+        );
+    }
+
+    .filters-scroll-container.filters-container::-webkit-scrollbar {
+        display: none;
+    }
+
+/* AI Assistant Styles */
+:root {
+    --ai-primary-color: #13004d;
+    --ai-secondary-color: #5d00ff;
+    --ai-background: #f9f9f9;
+    --ai-message-user: #13004d;
+    --ai-message-bot: #ffffff;
+    --ai-border: #eaeaea;
+    --ai-text: #333333;
+    --ai-success: #28a745;
+    --ai-error: #dc3545;
+    --ai-card-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+/* Base Styles */
+.ai-assistant-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: 9998;
+    display: none;
+    backdrop-filter: blur(3px);
+}
+
+.ai-assistant-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 1500px;
+    height: 90vh;
+    background: var(--ai-background);
+    border-radius: 16px;
+    box-shadow: var(--ai-card-shadow);
+    z-index: 9999;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Header Styles */
+.ai-assistant-header {
+    padding: 16px;
+    border-bottom: 1px solid var(--ai-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--ai-primary-color);
+    color: white;
+    border-radius: 16px 16px 0 0;
+}
+
+.ai-assistant-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.ai-close-btn {
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ai-close-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+}
+
+/* Content Area */
+.ai-assistant-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    scroll-behavior: smooth;
+    background-color: #f4f4f4;
+}
+
+.ai-assistant-content::-webkit-scrollbar {
+    width: 8px;
+    background-color: transparent;
+}
+
+.ai-assistant-content::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.ai-assistant-content::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Message Styles */
+.ai-message {
+    max-width: 85%;
+    padding: 14px 18px;
+    border-radius: 18px;
+    animation: fadeIn 0.3s ease;
+    font-size: 14px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.5;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.user-message {
+    background: var(--ai-message-user);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+}
+
+.bot-message {
+    background: var(--ai-message-bot);
+    color: var(--ai-text);
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+    border: 1px solid #eee;
+}
+
+/* File Display in Messages */
+.file-message {
+    padding: 12px;
+    background: #f8f8fa;
+    max-width: 95%;
+}
+
+.file-display-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.file-display-header {
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #eee;
+}
+
+.file-display-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.file-display-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease;
+}
+
+.file-display-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.12);
+}
+
+.file-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: #f0f4ff;
+    margin-right: 12px;
+    color: var(--ai-primary-color);
+}
+
+.file-details {
+    flex: 1;
+    overflow: hidden;
+}
+
+.file-display-name {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+}
+
+.file-display-info {
+    font-size: 12px;
+    color: #888;
+}
+
+.file-status {
+    display: flex;
+    align-items: center;
+    margin-left: 12px;
+}
+
+.success-icon {
+    color: var(--ai-success);
+    font-size: 20px;
+}
+
+/* Image Preview */
+.file-preview-image-container {
+    width: 100%;
+    margin-top: 12px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.file-preview-thumbnail {
+    max-width: 200px;
+    max-height: 120px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 2px solid white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.file-preview-thumbnail:hover {
+    transform: scale(1.05);
+}
+
+/* Image Modal */
+.ai-image-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    cursor: pointer;
+}
+
+.ai-image-modal-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+}
+
+.ai-image-modal-content img {
+    max-width: 100%;
+    max-height: 90vh;
+    border-radius: 8px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+}
+
+.ai-image-modal-close {
+    position: absolute;
+    top: -30px;
+    right: -30px;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.5);
+    transition: all 0.2s ease;
+}
+
+.ai-image-modal-close:hover {
+    background: rgba(255,255,255,0.2);
+    transform: rotate(90deg);
+}
+
+/* Input Area */
+.ai-input-container {
+    position: relative;
+    padding: 16px;
+    border-top: 1px solid var(--ai-border);
+    background-color: white;
+    border-radius: 0 0 16px 16px;
+}
+
+.ai-input-wrapper {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    position: relative;
+    background-color: #f5f5f5;
+    border-radius: 24px;
+    padding: 4px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transition: box-shadow 0.3s ease;
+}
+
+.ai-input-wrapper:focus-within {
+    box-shadow: 0 2px 10px rgba(93, 0, 255, 0.15);
+}
+
+.ai-input {
+    flex: 1;
+    min-height: 44px;
+    max-height: 150px;
+    padding: 12px 120px 12px 16px;
+    border-radius: 24px;
+    border: 1px solid transparent;
+    outline: none;
+    resize: none;
+    overflow-y: auto;
+    line-height: 1.4;
+    transition: all 0.3s ease;
+    background-color: transparent;
+    color: var(--ai-text);
+    font-size: 14px;
+    font-family: inherit;
+}
+
+.ai-input:focus {
+    border-color: rgba(93, 0, 255, 0.3);
+}
+
+.ai-action-buttons {
+    position: absolute;
+    right: 10px;
+    bottom: 8px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* File Actions */
+.ai-upload-btn input[type="file"] {
+    display: none;
+}
+
+.file-counter {
+    position: absolute;
+    bottom: -18px;
+    right: 10px;
+    font-size: 11px;
+    color: #888;
+}
+
+/* Input File Preview */
+.file-preview-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.file-preview-item {
+    display: flex;
+    align-items: center;
+    background: #f0f0f0;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 12px;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.file-preview-item:hover {
+    background: #e5e5e5;
+}
+
+.file-preview-name {
+    margin-right: 8px;
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.file-preview-size {
+    margin-right: 8px;
+    opacity: 0.7;
+    font-size: 10px;
+}
+
+.file-preview-remove {
+    cursor: pointer;
+    opacity: 0.7;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+}
+
+.file-preview-remove:hover {
+    opacity: 1;
+    background-color: rgba(0,0,0,0.1);
+}
+
+/* Action Buttons */
+.ai-action-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: var(--ai-primary-color);
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.ai-action-btn:hover {
+    background: var(--ai-secondary-color);
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.ai-action-btn[disabled] {
+    background: #d1d1d1;
+    cursor: not-allowed;
+    opacity: 0.5;
+    box-shadow: none;
+}
+
+/* Voice Recording */
+.ai-voice-btn {
+    position: relative;
+    background-color: var(--ai-primary-color);
+}
+
+.ai-voice-btn.recording {
+    background-color: var(--ai-error);
+    animation: pulse 2s infinite;
+}
+
+.voice-wave {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: rgba(220, 53, 69, 0.3);
+    transform: scale(1);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.recording .voice-wave {
+    animation: wave 2s infinite;
+}
+
+/* Typing Indicator */
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.typing-indicator span {
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--ai-primary-color);
+    opacity: 0.6;
+    animation: typingAnimation 1s infinite ease-in-out;
+}
+
+.typing-indicator span:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.typing-indicator span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+/* Notification */
+.ai-notification {
+    position: absolute;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    z-index: 10000;
+    animation: slideDown 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+    from { transform: translate(-50%, -20px); opacity: 0; }
+    to { transform: translate(-50%, 0); opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.9); }
+    25% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    75% { transform: scale(1); }
+    100% { transform: scale(0.9); }
+}
+
+@keyframes wave {
+    0% { transform: scale(1); opacity: 0.7; }
+    50% { transform: scale(2); opacity: 0; }
+    100% { transform: scale(3); opacity: 0; }
+}
+
+@keyframes typingAnimation {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.5); }
+}
+
+/* Material Icons Support */
+.material-icons-outlined {
+    font-size: 18px;
+    font-family: 'Material Icons Outlined';
+    font-weight: normal;
+    font-style: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-section left-section">
+            <button class="icon-button" style="width: 100px;" id="menu">
+                <span class="material-icons-outlined" id="line-menu" style="font-size: xx-large;">menu</span>
+            </button>
+            <div class="logo-container">
+                <img src="{% static 'search_engine/images/logo.png' %}" alt="Platform Logo" class="logo">
+                <span class="logo-text" style="font-size:x-large; font-family: Sans-Serif Fonts;"><b><I>IgAfrica</I></b></span>
+            </div>
+        </div>
+
+        <div class="nav-section center-section">
+            <div class="search-container">
+                <input type="search" class="search-input" placeholder="Search" >
+                <button class="search-button icon-button">
+                    <span class="material-icons-outlined" style="font-size: 25px; margin-top: 6px;">search</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="nav-section right-section">
+            <button class="icon-button mobile-search-button">
+                <span class="material-icons-outlined" style="width: 45px; height: 5px; font-size: 30px; margin-top: 10px;">search</span>
+            </button>
+            <button class="icon-button">
+                <span class="material-icons-outlined" style="font-size: 35px;">notifications</span>
+                <span class="notification-badge">3</span>
+            </button>
+            
+            <div class="lang-selector">
+                <button class="icon-button" id="langButton" aria-haspopup="true" aria-expanded="false">
+                    <span class="material-icons-outlined" style="font-size: 25px; padding: 0px;">language</span>
+                    <span class="country-code" style="font-size: small;">{{ CURRENT_LANG|upper }}</span>
+                </button>
+                <div class="lang-dropdown" role="menu">
+                    <form action="{% url 'set_language' %}" method="POST" id="langForm">
+                        {% csrf_token %}
+                        <input name="next" type="hidden" value="{{ request.path }}">
+                        
+                        {% for lang_code, lang_name in LANGUAGES %}
+                            <button type="submit"
+                                    name="language" 
+                                    style="border: none; width: 100%; height: 20px;"
+                                    value="{{ lang_code }}"
+                                    class="lang-option {% if lang_code == CURRENT_LANG %}active{% endif %}"
+                                    aria-selected="{% if lang_code == CURRENT_LANG %}true{% else %}false{% endif %}">
+                                {{ lang_name }} 
+                            </button>
+                        {% endfor %}
+                    </form>
+                </div>
+            </div>
+            
+
+            <button class="icon-button" id="profile-header">
+                <img src="{% static 'search_engine/images/profile.png' %}" alt="Profile" class="profile-picture" style="float: right;">
+            </button>
+        </div>
+    </nav>
+
+
+
+{% block menu_side_bar %}
+    {% include "side_bars/base_menu.html" %}
+{% endblock menu_side_bar %}
+
+
+
+{% block filters %}
+   <!-- Updated HTML Structure for Filters -->
+   {% include "filters/base.html" %}
+{% endblock filters %}
+        
+    <main class="main-content" id="mainContent">
+   
+    {% block main_content %}
+    <div class="video-grid">
+            
+        <!-- Card 1: Standard Course -->
+        <div class="video-card">
+           <div class="thumbnail-container">
+               <img class="thumbnail" src="{% static 'search_engine/images/thumb.png' %}" alt="Advanced Python Programming">
+               <div class="course-type">COURSE</div>
+               <div class="enrollment-status">Enrolled ✓</div>
+               <div class="duration">8h 30m / week</div>
+           </div>
+           <div class="video-details">
+               <div class="channel-icon">
+                   <img src="{% static 'search_engine/images/profile.png' %}" class="channel-icon" alt="Channel icon">
+               </div>
+               <div class="video-info">
+                   <h3 class="video-title">Advanced Python Programming</h3>
+                   <div class="instructor-name">
+                       <svg class="members-icon" viewBox="0 0 24 24">
+                           <path fill="currentColor" d="M16,13C15.71,13 15.38,13 15.03,13.05C16.19,13.89 17,15 17,16.5V19H23V16.5C23,14.17 18.33,13 16,13M8,13C5.67,13 1,14.17 1,16.5V19H15V16.5C15,14.17 10.33,13 8,13M8,11A3,3 0 0,0 11,8A3,3 0 0,0 8,5A3,3 0 0,0 5,8A3,3 0 0,0 8,11M16,11A3,3 0 0,0 19,8A3,3 0 0,0 16,5A3,3 0 0,0 13,8A3,3 0 0,0 16,11Z"/>
+                       </svg>
+                       <b>Code Master AcademyPublished</b>
+                   </div>
+                   <div class="course-meta">
+                       <span class="difficulty intermediate">Intermediate</span>
+                       <div class="rating">
+                           ⭐ 4.8
+                       </div>
+                       <span class="price">$49.99</span>
+                   </div>
+                   <div class="course-meta">
+                       <span class="published-date" style="padding-bottom: -500px;">Published 2 months ago</span>
+                    </div>
+                    <div class="course-meta">
+                        <span>20 Lessons</span>
+                        <span class="separator">•</span>
+                        <span>87 Students</span>
+                    </div>
+               </div>
+           </div>
+           <div class="progress-container">
+               <div class="progress-bar">
+                 <div class="progress" style="width: 85%"></div>
+               </div>
+               <div class="progress-text">12/14 lessons completed</div>
+           </div>
+       </div>
+       
+       <!-- Card 2: Free Course -->
+       <div class="video-card">
+           <div class="thumbnail-container">
+               <img class="thumbnail" src="{% static 'search_engine/images/thumb.png' %}" alt="Introduction to Web Development">
+               <div class="course-type free-tag">FREE</div>
+               <div class="duration">6h 15m / week</div>
+           </div>
+           <div class="video-details">
+               <div class="channel-icon">
+                   <img src="{% static 'search_engine/images/profile.png' %}" class="channel-icon" alt="Channel icon">
+               </div>
+               <div class="video-info">
+                   <h3 class="video-title">Introduction to Web Development</h3>
+                   <div class="instructor-name">
+                       <svg class="members-icon" viewBox="0 0 24 24">
+                           <path fill="currentColor" d="M16,13C15.71,13 15.38,13 15.03,13.05C16.19,13.89 17,15 17,16.5V19H23V16.5C23,14.17 18.33,13 16,13M8,13C5.67,13 1,14.17 1,16.5V19H15V16.5C15,14.17 10.33,13 8,13M8,11A3,3 0 0,0 11,8A3,3 0 0,0 8,5A3,3 0 0,0 5,8A3,3 0 0,0 8,11M16,11A3,3 0 0,0 19,8A3,3 0 0,0 16,5A3,3 0 0,0 13,8A3,3 0 0,0 16,11Z"/>
+                       </svg>
+                       <b>Web Dev Pro</b>
+                   </div>
+                   <div class="course-meta">
+                       <span class="difficulty beginner">Beginner</span>
+                       <div class="rating">
+                           ⭐ 4.9
+                       </div>
+                   </div>
+                   <div class="course-meta">
+                       <span class="published-date" style="padding-bottom: -500px;">Published 2 months ago</span>
+                    </div>
+                    <div class="course-meta">
+                        <span>20 Lessons</span>
+                        <span class="separator">•</span>
+                        <span>87 Students</span>
+                    </div>
+               </div>
+           </div>
+           <div class="progress-container">
+               <div class="progress-bar">
+                 <div class="progress" style="width: 10%"></div>
+               </div>
+               <div class="progress-text">12/14 lessons completed</div>
+           </div>
+       </div>
+       
+       <!-- Card 3: New Course -->
+       <div class="video-card new-course">
+           <div class="thumbnail-container">
+               <img class="thumbnail" src="{% static 'search_engine/images/thumb.png' %}" alt="Data Science Fundamentals">
+               <div class="course-type premium-tag">PREMIUM</div>
+               <div class="duration">12h 45m / week</div>
+           </div>
+           <div class="video-details">
+               <div class="channel-icon">
+                   <img src="{% static 'search_engine/images/profile.png' %}" class="channel-icon" alt="Channel icon">
+               </div>
+               <div class="video-info">
+                   <h3 class="video-title">Data Science Fundamentals</h3>
+                   <div class="instructor-name">
+                       <svg class="members-icon" viewBox="0 0 24 24">
+                           <path fill="currentColor" d="M16,13C15.71,13 15.38,13 15.03,13.05C16.19,13.89 17,15 17,16.5V19H23V16.5C23,14.17 18.33,13 16,13M8,13C5.67,13 1,14.17 1,16.5V19H15V16.5C15,14.17 10.33,13 8,13M8,11A3,3 0 0,0 11,8A3,3 0 0,0 8,5A3,3 0 0,0 5,8A3,3 0 0,0 8,11M16,11A3,3 0 0,0 19,8A3,3 0 0,0 16,5A3,3 0 0,0 13,8A3,3 0 0,0 16,11Z"/>
+                       </svg>
+                       <b>Data Science Hub</b>
+                   </div>
+                   <div class="course-meta">
+                       <span class="difficulty intermediate">Intermediate</span>
+                       <div class="rating">
+                           ⭐ 4.7
+                       </div>
+                       <span class="price">$79.99</span>
+                   </div>
+                   <div class="course-meta">
+                       <span class="published-date" style="padding-bottom: -500px;">Published 2 months ago</span>
+                    </div>
+                    <div class="course-meta">
+                        <span>20 Lessons</span>
+                        <span class="separator">•</span>
+                        <span>87 Students</span>
+                    </div>
+               </div>
+           </div>
+           <div class="progress-container">
+               <div class="progress-bar">
+                 <div class="progress" style="width: 85%"></div>
+               </div>
+               <div class="progress-text">12/14 lessons completed</div>
+           </div>
+       </div>
+       
+       <!-- Card 4: Recommended Course -->
+       <div class="video-card recommended-course">
+           <div class="thumbnail-container">
+               <img class="thumbnail" src="{% static 'search_engine/images/thumb.png' %}" alt="UI/UX Design Principles">
+               <div class="course-type">COURSE</div>
+               <div class="duration">10h 20m / week</div>
+           </div>
+           <div class="video-details">
+               <div class="channel-icon">
+                   <img src="{% static 'search_engine/images/profile.png' %}" class="channel-icon" alt="Channel icon">
+               </div>
+               <div class="video-info">
+                   <h3 class="video-title">UI/UX Design Principles</h3>
+                   <div class="instructor-name">
+                       <svg class="members-icon" viewBox="0 0 24 24">
+                           <path fill="currentColor" d="M16,13C15.71,13 15.38,13 15.03,13.05C16.19,13.89 17,15 17,16.5V19H23V16.5C23,14.17 18.33,13 16,13M8,13C5.67,13 1,14.17 1,16.5V19H15V16.5C15,14.17 10.33,13 8,13M8,11A3,3 0 0,0 11,8A3,3 0 0,0 8,5A3,3 0 0,0 5,8A3,3 0 0,0 8,11M16,11A3,3 0 0,0 19,8A3,3 0 0,0 16,5A3,3 0 0,0 13,8A3,3 0 0,0 16,11Z"/>
+                       </svg>
+                       <b>DesignMasters Masters</b>
+                   </div>
+                   <div class="course-meta">
+                       <span class="difficulty intermediate">Intermediate</span>
+                       <div class="rating">
+                           ⭐ 4.9
+                       </div>
+                       <span class="price">$59.99</span>
+                       
+                   </div>
+                   <div class="course-meta">
+                       <span class="published-date" style="padding-bottom: -500px;">Published 2 months ago</span>
+                    </div>
+                    <div class="course-meta">
+                        <span>20 Lessons</span>
+                        <span class="separator">•</span>
+                        <span>87 Students</span>
+                    </div>
+               </div>
+           </div>
+           <div class="progress-container">
+               <div class="progress-bar">
+                 <div class="progress" style="width: 85%"></div>
+               </div>
+               <div class="progress-text">12/14 lessons completed</div>
+           </div>
+       </div>
+       
+       <!-- Card 5: Popular Course -->
+       <div class="video-card popular-course">
+           <div class="thumbnail-container">
+               <img class="thumbnail" src="{% static 'search_engine/images/thumb.png' %}" alt="Machine Learning Bootcamp">
+               <div class="course-type premium-tag">PREMIUM</div>
+               <div class="duration">24h 30m / week</div>
+           </div>
+           <div class="video-details">
+               <div class="channel-icon">
+                   <img src="{% static 'search_engine/images/profile.png' %}" class="channel-icon" alt="Channel icon">
+               </div>
+               <div class="video-info">
+                   <h3 class="video-title">Machine Learning Bootcamp</h3>
+                   <div class="instructor-name">
+                       <svg class="members-icon" viewBox="0 0 24 24">
+                           <path fill="currentColor" d="M16,13C15.71,13 15.38,13 15.03,13.05C16.19,13.89 17,15 17,16.5V19H23V16.5C23,14.17 18.33,13 16,13M8,13C5.67,13 1,14.17 1,16.5V19H15V16.5C15,14.17 10.33,13 8,13M8,11A3,3 0 0,0 11,8A3,3 0 0,0 8,5A3,3 0 0,0 5,8A3,3 0 0,0 8,11M16,11A3,3 0 0,0 19,8A3,3 0 0,0 16,5A3,3 0 0,0 13,8A3,3 0 0,0 16,11Z"/>
+                       </svg>
+                       <b>AIA </b>
+                   </div>
+                   <div class="course-meta">
+                       <span class="difficulty advanced">Advanced</span>
+                       <div class="rating">
+                           ⭐ 4.8
+                       </div>
+                       <span class="price">$129.99</span>
+                   </div>
+                   <div class="course-meta">
+                       <span class="published-date" style="padding-bottom: -500px;">Published 2 months ago</span>
+                    </div>
+                    <div class="course-meta">
+                        <span>20 Lessons</span>
+                        <span class="separator">•</span>
+                        <span>87 Students</span>
+                    </div>
+               </div>
+           </div>
+           <div class="progress-container">
+               <div class="progress-bar">
+                 <div class="progress" style="width: 85%"></div>
+               </div>
+               <div class="progress-text">12/14 lessons completed</div>
+           </div>
+    </div>
+    {% endblock main_content %}
+
+    </main>
+
+{% block user_side_bar %}
+     {% include "side_bars/base_user.html" %}
+{% endblock user_side_bar %}
+
+
+    <div class="ai-assistant-overlay" id="aiOverlay"></div>
+    <div class="ai-assistant-container" id="aiContainer">
+        <div class="ai-assistant-header">
+            <h3>IgAfrica AI Assistant</h3>
+            <span class="material-icons-outlined ai-close-btn" id="aiCloseBtn">close</span>
+        </div>
+        
+        <div class="ai-assistant-content" id="aiContent">
+            <!-- Messages will be inserted here -->
+        </div>
+        
+        <div class="ai-input-container">
+            <!-- File preview area will appear here when files are selected -->
+            <div class="file-preview-area" id="filePreviewArea"></div>
+            
+            <div class="ai-input-wrapper">
+                <textarea
+                style="font-family: sans-serif"
+                    class="ai-input"
+                    id="aiInput"
+                    placeholder="IgAfrica.. "
+                ></textarea>
+                <div class="ai-action-buttons">
+                    <button class="ai-action-btn ai-voice-btn" id="aiVoiceBtn" title="Voice input">
+                        <div class="voice-wave"></div>
+                        <span class="material-icons-outlined">mic</span>
+                    </button>
+                    <label class="ai-action-btn ai-upload-btn" title="Upload files (max 5)">
+                        <input type="file" id="aiFileInput" multiple>
+                        <span class="material-icons-outlined">attach_file</span>
+                    </label>
+                    <button class="ai-action-btn ai-send-btn" id="aiSendBtn" disabled title="Send message">
+                        <span class="material-icons-outlined">send</span>
+                    </button>
+                </div>
+            </div>
+            <div class="file-counter" id="fileCounter"></div>
+        </div>
+    </div>
+
+<script>
+
+    class AIAssistant {
+        constructor(apiEndpoint, transURL, options = {}) {
+            // DOM elements
+            this.container = document.getElementById('aiContainer');
+            this.overlay = document.getElementById('aiOverlay');
+            this.content = document.getElementById('aiContent');
+            this.input = document.getElementById('aiInput');
+            this.sendBtn = document.getElementById('aiSendBtn');
+            this.closeBtn = document.getElementById('aiCloseBtn');
+            this.fileInput = document.getElementById('aiFileInput');
+            this.filePreviewArea = document.getElementById('filePreviewArea');
+            this.voiceBtn = document.getElementById('aiVoiceBtn');
+            
+            // Configuration
+            this.apiEndpoint = apiEndpoint;
+            this.transcriptionUrl = transURL;
+            this.uploadedFiles = [];
+            this.isRecording = false;
+            this.mediaRecorder = null;
+            this.audioChunks = [];
+            
+            // File upload configuration
+            this.fileUploadConfig = {
+                maxFiles: options.maxFiles || 5,
+                maxFileSize: options.maxFileSize || 10 * 1024 * 1024, // 10MB default
+                allowedTypes: options.allowedTypes || null // null means all types allowed
+            };
+            
+            // Streaming configuration
+            this.useStreaming = options.useStreaming !== undefined ? options.useStreaming : true;
+            
+            // Initialize event listeners
+            this.initializeEventListeners();
+        }
+        
+        initializeEventListeners() {
+            // Open assistant
+            document.getElementById('aiAssistantButton')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.show();
+            });
+    
+            // Close assistant
+            this.overlay.addEventListener('click', () => this.hide());
+            this.closeBtn.addEventListener('click', () => this.hide());
+            
+            // Voice recording
+            this.voiceBtn.addEventListener('click', () => this.toggleVoiceRecording());
+            
+            // Send message
+            this.sendBtn.addEventListener('click', () => this.handleSend());
+            
+            // Input handling
+            this.input.addEventListener('keypress', (e) => {
+                if (e.shiftKey === false && e.key === 'Enter') {
+                    e.preventDefault();
+                    this.handleSend();
+                }
+            });
+            
+            // Auto-resize textarea
+            this.input.addEventListener('input', () => {
+                this.resizeTextarea();
+                this.updateSendButtonState();
+            });
+            
+            // File upload handling
+            this.fileInput.addEventListener('change', (e) => {
+                const files = Array.from(e.target.files);
+                if (files.length > 0) {
+                    this.handleFileSelection(files);
+                    // Reset file input to allow selecting the same file again
+                    this.fileInput.value = '';
+                }
+            });
+        }
+        
+        resizeTextarea() {
+            // Reset height to calculate new height
+            this.input.style.height = 'auto';
+            
+            // Set new height based on content (with max-height constraint from CSS)
+            const newHeight = Math.min(this.input.scrollHeight, 150);
+            this.input.style.height = `${newHeight}px`;
+        }
+        
+        updateSendButtonState() {
+            // Enable button if there's text or files
+            const hasContent = this.input.value.trim() !== '' || this.uploadedFiles.length > 0;
+            this.sendBtn.disabled = !hasContent;
+            
+            // Visual feedback
+            if (hasContent) {
+                this.sendBtn.style.opacity = '1';
+            } else {
+                this.sendBtn.style.opacity = '0.5';
+            }
+        }
+    
+        show() {
+            this.overlay.style.display = 'block';
+            this.container.style.display = 'flex';
+            this.input.focus();
+        }
+    
+        hide() {
+            if (this.isRecording) {
+                this.stopRecording();
+            }
+            this.overlay.style.display = 'none';
+            this.container.style.display = 'none';
+        }
+    
+        async handleSend() {
+            const message = this.input.value.trim();
+            
+            // Don't send if there's no message or files
+            if (!message && this.uploadedFiles.length === 0) return;
+            if (!message && this.uploadedFiles.length > 0) {
+                this.showNotification("Please add the prompt");
+                return
+            };
+            // Create message content
+            let messageContent = message;
+            
+            {% comment %} // Add file information if applicable
+            if (this.uploadedFiles.length > 0) {
+                const fileNames = this.uploadedFiles.map(file => 
+                    `${file.name} (${this.formatFileSize(file.size)})`
+                );
+                
+                if (message) {
+                    messageContent += '\n\nFiles: ' + fileNames.join(', ');
+                } else {
+                    messageContent = 'Files: ' + fileNames.join(', ');
+                }
+            } {% endcomment %}
+            
+            // Display message
+            this.addMessage(messageContent, 'user');
+            
+            // Display file preview in the user message if files exist
+            if (this.uploadedFiles.length > 0) {
+                this.displayFilesInMessage(this.uploadedFiles, 'before-submission');
+            }
+            
+            // Clear input and file area
+            this.input.value = '';
+            this.clearFilePreview();
+            const filesToProcess = [...this.uploadedFiles]; // Create a copy for processing
+            this.uploadedFiles = [];
+            this.resizeTextarea();
+            this.updateSendButtonState();
+            
+            try {
+                // Prepare data for API
+                const formData = new FormData();
+                formData.append('message', message);
+                
+                // Add files if any
+                filesToProcess.forEach(file => {
+                    formData.append('files', file);
+                });
+                
+                // Create response container
+                const responseContainer = this.createResponseContainer();
+                
+                if (this.useStreaming) {
+                    // Handle streaming response
+                    await this.fetchStreamingResponse(formData, responseContainer, filesToProcess);
+                } else {
+                    // Handle non-streaming response
+                    const response = await this.fetchAIResponse(formData);
+                    responseContainer.innerText = response;
+                    
+                    // Display files in response after submission
+                    if (filesToProcess.length > 0) {
+                        this.displayFilesInMessage(filesToProcess, 'after-submission');
+                    }
+                }
+            } catch (error) {
+                this.addMessage('Sorry, I encountered an error. Please try again.', 'bot');
+                console.error('AI Assistant error:', error);
+            }
+        }
+        
+        createResponseContainer() {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'ai-message bot-message';
+            
+            // Start with typing indicator if streaming
+            if (this.useStreaming) {
+                messageDiv.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
+            }
+            
+            this.content.appendChild(messageDiv);
+            this.content.scrollTop = this.content.scrollHeight;
+            return messageDiv;
+        }
+        
+        async fetchStreamingResponse(formData, responseContainer, filesToProcess) {
+            try {
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '{{ csrf_token }}';
+                const response = await fetch(this.apiEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                        'Accept': 'text/event-stream',
+                    },
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+                
+                // Clear typing indicator
+                responseContainer.innerHTML = '';
+                
+                let textContent = '';
+                
+                if (response.body) {
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder();
+                    
+                    // Read chunks from stream
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+                        
+                        // Decode and process the chunk
+                        const chunk = decoder.decode(value, { stream: true });
+                        
+                        try {
+                            // Assuming each chunk is a complete JSON object
+                            const data = JSON.parse(chunk);
+                            if (data.content) {
+                                textContent += data.content;
+                                responseContainer.innerText = textContent;
+                                this.content.scrollTop = this.content.scrollHeight;
+                            }
+                        } catch (e) {
+                            // If not valid JSON, just append as text
+                            textContent += chunk;
+                            responseContainer.innerText = textContent;
+                        }
+                        
+                        this.content.scrollTop = this.content.scrollHeight;
+                    }
+                    
+                    // Display files after response is complete
+                    if (filesToProcess.length > 0) {
+                        this.displayFilesInMessage(filesToProcess, 'after-submission');
+                    }
+                } else {
+                    responseContainer.innerText = 'No streaming response available';
+                }
+            } catch (error) {
+                console.error('Error with streaming response:', error);
+                responseContainer.innerText = 'Sorry, I encountered an error. Please try again.';
+            }
+        }
+    
+        async fetchAIResponse(formData) {
+            // Implement actual API call with FormData for file upload support
+            try {
+                const response = await fetch(this.apiEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || '{{ csrf_token }}'
+                    },
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                return data.answer || 'No response received';
+            } catch (error) {
+                console.error('Error fetching AI response:', error);
+                throw error;
+            }
+        }
+    
+        addMessage(content, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `ai-message ${sender}-message`;
+            
+            // Process content for multiline
+            messageDiv.innerText = content;
+            
+            this.content.appendChild(messageDiv);
+            this.content.scrollTop = this.content.scrollHeight;
+            
+            return messageDiv;
+        }
+        
+        // New method to display file preview inside message area
+        displayFilesInMessage(files, displayType) {
+            const fileDisplayContainer = document.createElement('div');
+            fileDisplayContainer.className = 'file-display-container';
+            
+            const header = document.createElement('div');
+            header.className = 'file-display-header';
+            header.textContent = displayType === 'before-submission' ? `File${files.length == 1 ? "" : "s"} to be submitted: ` : `Submitted File${files.length == 1 ? "" : "s"}:`;
+            fileDisplayContainer.appendChild(header);
+            
+            const fileList = document.createElement('div');
+            fileList.className = 'file-display-list';
+            
+            files.forEach(file => {
+                const fileItem = this.createFileDisplayItem(file, displayType);
+                fileList.appendChild(fileItem);
+            });
+            
+            fileDisplayContainer.appendChild(fileList);
+            
+            // Add the container to the chat
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `ai-message ${displayType === 'before-submission' ? 'user' : 'bot'}-message file-message`;
+            messageDiv.appendChild(fileDisplayContainer);
+            
+            this.content.appendChild(messageDiv);
+            this.content.scrollTop = this.content.scrollHeight;
+        }
+        
+        createFileDisplayItem(file, displayType) {
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-display-item';
+            
+            // File icon based on type
+            const iconContainer = document.createElement('div');
+            iconContainer.className = 'file-icon';
+            const icon = document.createElement('span');
+            icon.className = 'material-icons-outlined';
+            
+            // Determine icon based on MIME type
+            if (file.type.startsWith('image/')) {
+                icon.textContent = 'image';
+            } else if (file.type.startsWith('video/')) {
+                icon.textContent = 'videocam';
+            } else if (file.type.startsWith('audio/')) {
+                icon.textContent = 'audiotrack';
+            } else if (file.type.includes('pdf')) {
+                icon.textContent = 'picture_as_pdf';
+            } else if (file.type.includes('word') || file.type.includes('document')) {
+                icon.textContent = 'description';
+            } else if (file.type.includes('excel') || file.type.includes('spreadsheet')) {
+                icon.textContent = 'table_chart';
+            } else {
+                icon.textContent = 'insert_drive_file';
+            }
+            
+            iconContainer.appendChild(icon);
+            fileItem.appendChild(iconContainer);
+            
+            // File details container
+            const fileDetails = document.createElement('div');
+            fileDetails.className = 'file-details';
+            
+            // File name
+            const fileName = document.createElement('div');
+            fileName.className = 'file-display-name';
+            fileName.textContent = file.name;
+            fileDetails.appendChild(fileName);
+            
+            // File size and type
+            const fileInfo = document.createElement('div');
+            fileInfo.className = 'file-display-info';
+            fileInfo.textContent = `${this.formatFileSize(file.size)} • ${file.type ? (file.type.length <= 20 ? file.type : file.type.substring(0, 20) + '...') : 'Unknown type'}\nfile name: ${file.name.length > 30 ? file.name.substring(0, 30) + '...' : file.name}`;
+            fileDetails.appendChild(fileInfo);
+            
+            fileItem.appendChild(fileDetails);
+            
+            // Add preview if it's an image
+            if (file.type.startsWith('image/') && displayType === 'after-submission') {
+                this.addImagePreview(fileItem, file);
+            }
+            
+            // Add status indicator for after submission
+            if (displayType === 'after-submission') {
+                const statusIndicator = document.createElement('div');
+                statusIndicator.className = 'file-status';
+                statusIndicator.innerHTML = '<span class="material-icons-outlined success-icon">check_circle</span>';
+                fileItem.appendChild(statusIndicator);
+            }
+            
+            return fileItem;
+        }
+        
+        addImagePreview(fileItem, file) {
+            // Create a preview container
+            const previewContainer = document.createElement('div');
+            previewContainer.className = 'file-preview-image-container';
+            
+            // Create thumbnail
+            const thumbnail = document.createElement('img');
+            thumbnail.className = 'file-preview-thumbnail';
+            thumbnail.alt = file.name;
+            
+            // Create object URL for the image
+            const objectUrl = URL.createObjectURL(file);
+            thumbnail.src = objectUrl;
+            
+            // Add click handler to expand image
+            thumbnail.addEventListener('click', () => {
+                this.showImageModal(objectUrl, file.name);
+            });
+            
+            // Add to container
+            previewContainer.appendChild(thumbnail);
+            fileItem.appendChild(previewContainer);
+        }
+        
+        showImageModal(src, altText) {
+            // Create modal elements
+            const modal = document.createElement('div');
+            modal.className = 'ai-image-modal';
+            
+            const modalContent = document.createElement('div');
+            modalContent.className = 'ai-image-modal-content';
+            
+            const image = document.createElement('img');
+            image.src = src;
+            image.alt = altText;
+            
+            const closeBtn = document.createElement('span');
+            closeBtn.className = 'ai-image-modal-close';
+            closeBtn.innerHTML = '&times;';
+            closeBtn.addEventListener('click', () => {
+                document.body.removeChild(modal);
+            });
+            
+            // Assemble and show modal
+            modalContent.appendChild(closeBtn);
+            modalContent.appendChild(image);
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+            
+            // Close modal when clicking outside the image
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    document.body.removeChild(modal);
+                }
+            });
+        }
+    
+        handleFileSelection(files) {
+            // Check if adding these files would exceed the limit
+            if (this.uploadedFiles.length + files.length > this.fileUploadConfig.maxFiles) {
+                this.showNotification(`You can only upload a maximum of ${this.fileUploadConfig.maxFiles} files.`);
+                
+                // Only add files up to the limit
+                const remainingSlots = this.fileUploadConfig.maxFiles - this.uploadedFiles.length;
+                if (remainingSlots <= 0) return;
+                
+                files = files.slice(0, remainingSlots);
+            }
+            
+            // Process each file
+            files.forEach(file => {
+                // Check file size
+                if (file.size > this.fileUploadConfig.maxFileSize) {
+                    this.showNotification(`File ${file.name} exceeds the maximum size limit of ${this.formatFileSize(this.fileUploadConfig.maxFileSize)}.`);
+                    return;
+                }
+                
+                // Check file type if restrictions exist
+                if (this.fileUploadConfig.allowedTypes && !this.fileUploadConfig.allowedTypes.includes(file.type)) {
+                    this.showNotification(`File type ${file.type} is not allowed.`);
+                    return;
+                }
+                
+                // Add file to collection and preview
+                this.uploadedFiles.push(file);
+                this.displayFilePreview(file);
+            });
+            
+            this.updateSendButtonState();
+            
+            // Update file counter
+            this.updateFileCounter();
+        }
+        
+        updateFileCounter() {
+            const fileCounter = document.getElementById('fileCounter');
+            if (fileCounter) {
+                fileCounter.textContent = this.uploadedFiles.length > 0 ? 
+                    `${this.uploadedFiles.length}/${this.fileUploadConfig.maxFiles} files selected` : '';
+            }
+        }
+        
+        showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'ai-notification';
+            notification.textContent = message;
+            
+            // Add to UI
+            this.container.appendChild(notification);
+            
+            // Remove after timeout
+            setTimeout(() => {
+                if (notification.parentNode === this.container) {
+                    this.container.removeChild(notification);
+                }
+            }, 3000);
+        }
+    
+        displayFilePreview(file) {
+            const filePreviewItem = document.createElement('div');
+            filePreviewItem.className = 'file-preview-item';
+            
+            const fileName = document.createElement('span');
+            fileName.className = 'file-preview-name';
+            fileName.textContent = file.name;
+            
+            const fileSize = document.createElement('span');
+            fileSize.className = 'file-preview-size';
+            fileSize.textContent = this.formatFileSize(file.size);
+            
+            const removeButton = document.createElement('span');
+            removeButton.className = 'material-icons-outlined file-preview-remove';
+            removeButton.textContent = 'close';
+            removeButton.addEventListener('click', () => this.removeFile(file, filePreviewItem));
+            
+            filePreviewItem.appendChild(fileName);
+            filePreviewItem.appendChild(fileSize);
+            filePreviewItem.appendChild(removeButton);
+            this.filePreviewArea.appendChild(filePreviewItem);
+        }
+    
+        removeFile(file, previewElement) {
+            // Remove from array
+            const index = this.uploadedFiles.findIndex(f => f === file);
+            if (index !== -1) {
+                this.uploadedFiles.splice(index, 1);
+            }
+            
+            // Remove from UI
+            if (previewElement && previewElement.parentNode === this.filePreviewArea) {
+                this.filePreviewArea.removeChild(previewElement);
+            }
+            
+            // Update button state and counter
+            this.updateSendButtonState();
+            this.updateFileCounter();
+        }
+    
+        clearFilePreview() {
+            while (this.filePreviewArea.firstChild) {
+                this.filePreviewArea.removeChild(this.filePreviewArea.firstChild);
+            }
+            this.updateFileCounter();
+        }
+    
+        formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+    
+        // Voice recording methods
+        async toggleVoiceRecording() {
+            if (this.isRecording) {
+                this.stopRecording();
+            } else {
+                await this.startRecording();
+            }
+        }
+    
+        async startRecording() {
+            try {
+                // Request audio access
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                
+                // Visual feedback
+                this.voiceBtn.classList.add('recording');
+                this.voiceBtn.querySelector('.material-icons-outlined').textContent = 'mic';
+                
+                // Initialize recorder
+                this.audioChunks = [];
+                this.mediaRecorder = new MediaRecorder(stream);
+                
+                // Handle data
+                this.mediaRecorder.addEventListener('dataavailable', (event) => {
+                    if (event.data.size > 0) {
+                        this.audioChunks.push(event.data);
+                    }
+                });
+                
+                // Handle recording stop
+                this.mediaRecorder.addEventListener('stop', () => {
+                    // Process audio data
+                    this.processAudioData();
+                    
+                    // Clean up
+                    stream.getTracks().forEach(track => track.stop());
+                });
+                
+                // Start recording
+                this.mediaRecorder.start();
+                this.isRecording = true;
+                
+                // Add a notification to the chat
+                this.addMessage('Voice recording started...', 'bot');
+                
+            } catch (error) {
+                console.error('Error accessing microphone:', error);
+                this.addMessage('Unable to access microphone. Please check your browser permissions.', 'bot');
+            }
+        }
+    
+        stopRecording() {
+            if (this.mediaRecorder && this.isRecording) {
+                // Visual feedback
+                this.voiceBtn.classList.remove('recording');
+                this.voiceBtn.querySelector('.material-icons-outlined').textContent = 'mic';
+                
+                // Stop recording
+                this.mediaRecorder.stop();
+                this.isRecording = false;
+                
+                // Add a notification
+                this.addMessage('Processing voice input...', 'bot');
+            }
+        }
+    
+        async processAudioData() {
+            try {
+                // Create audio blob
+                const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
+                
+                // Create FormData for API
+                const formData = new FormData();
+                formData.append('audio', audioBlob, 'recording.webm');
+                
+                // Show processing indicator
+                const processingIndicator = this.addTypingIndicator();
+                
+                // Send to transcription service
+                const response = await fetch(this.transcriptionUrl, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || '{{ csrf_token }}'
+                    },
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Transcription service error');
+                }
+                
+                const data = await response.json();
+                
+                // Remove processing indicator
+                if (processingIndicator.parentNode === this.content) {
+                    this.content.removeChild(processingIndicator);
+                }
+                
+                if (data.transcription) {
+                    // Set transcribed text to input
+                    this.input.value = data.transcription;
+                    this.resizeTextarea();
+                    this.updateSendButtonState();
+                    this.input.focus();
+                    
+                    // Add notification
+                    this.addMessage('Transcription complete!', 'bot');
+                } else {
+                    this.addMessage('No speech detected. Please try again.', 'bot');
+                }
+                
+            } catch (error) {
+                console.error('Error processing audio:', error);
+                this.addMessage(`Error processing voice recording. Please try again.`, 'bot');
+            }
+        }
+        
+        addTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'ai-message bot-message';
+            typingDiv.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
+            this.content.appendChild(typingDiv);
+            this.content.scrollTop = this.content.scrollHeight;     
+            return typingDiv;
+        }
+    }
+    
+     // Initialize the AI Assistant when DOM is ready
+     document.addEventListener('DOMContentLoaded', function() {
+        // Create AI Assistant instance with your endpoints
+        const assistant = new AIAssistant(
+            '/api/ai/chat',           // Chat API endpoint
+            '/api/ai/transcribe',     // Voice transcription endpoint
+            {
+                maxFiles: 5,              // Maximum number of files
+                maxFileSize: 10 * 1024 * 1024, // 10MB max file size
+                allowedTypes: null,       // All file types allowed
+                useStreaming: true        // Use streaming for responses
+            }
+        );
+        
+        // Add welcome message
+        assistant.addMessage('Hello! I\'m your AI assistant. How can I help you today?', 'bot');
+    });
+
+  
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // ====================== Search Toggle (Mobile) ======================
+        const mobileSearchButton = document.querySelector('.mobile-search-button');
+        const centerSection = document.querySelector('.center-section');
+        const navBar = document.querySelector('.nav-bar');
+        const searchIcon = mobileSearchButton?.querySelector('.material-icons-outlined');
+        const searchInput = document.querySelector('.search-input');
+      
+        function toggleSearch() {
+          navBar.classList.toggle('search-active');
+          centerSection.classList.toggle('active');
+          
+          // Update icon and focus input
+          const isActive = centerSection.classList.contains('active');
+          if (searchIcon) searchIcon.textContent = isActive ? 'close' : 'search';
+          if (isActive && searchInput) searchInput.focus();
+        }
+      
+        mobileSearchButton?.addEventListener('click', toggleSearch);
+      
+        // Close search when clicking outside (mobile only)
+        document.addEventListener('click', (e) => {
+          if (window.innerWidth <= 768 && centerSection?.classList.contains('active')) {
+            if (!e.target.closest('.center-section') && !e.target.closest('.mobile-search-button')) {
+              toggleSearch();
+            }
+          }
+        });
+      
+        // Reset search on desktop
+        const resetSearchOnDesktop = () => {
+          if (window.innerWidth > 768) {
+            navBar?.classList.remove('search-active');
+            centerSection?.classList.remove('active');
+            if (searchIcon) searchIcon.textContent = 'search';
+          }
+        };
+        window.addEventListener('resize', resetSearchOnDesktop);
+      
+        // ====================== Language Selector ======================
+        const langButton = document.getElementById('langButton');
+        const langDropdown = document.querySelector('.lang-dropdown');
+      
+        function toggleLangDropdown(e) {
+          e?.stopPropagation();
+          const isExpanded = langButton?.getAttribute('aria-expanded') === 'true';
+          langButton?.setAttribute('aria-expanded', !isExpanded);
+          langDropdown?.classList.toggle('show');
+        }
+      
+        langButton?.addEventListener('click', toggleLangDropdown);
+      
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!e.target.closest('.lang-selector')) {
+            langDropdown?.classList.remove('show');
+            langButton?.setAttribute('aria-expanded', 'false');
+          }
+        });
+      
+        // ====================== Sidebar Toggle ======================
+        const menuButton = document.querySelector('.left-section .icon-button');
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+      
+        function toggleSidebar() {
+          sidebar?.classList.toggle('active');
+          if (window.innerWidth < 768) {
+            document.addEventListener('click', closeSidebarOnMobile);
+          }
+        }
+      
+        function closeSidebarOnMobile(e) {
+          if (!sidebar?.contains(e.target) && !menuButton?.contains(e.target)) {
+            sidebar?.classList.remove('active');
+            document.removeEventListener('click', closeSidebarOnMobile);
+          }
+        }
+      
+        menuButton?.addEventListener('click', toggleSidebar);
+      
+        // Initialize sidebar state
+        const handleSidebarOnResize = () => {
+          if (window.innerWidth >= 768) {
+            sidebar?.classList.add('active');
+          } else {
+            sidebar?.classList.remove('active');
+          }
+        };
+        window.addEventListener('resize', handleSidebarOnResize);
+        handleSidebarOnResize(); // Run once on load
+      
+        // ====================== User Sidebar (Profile) ======================
+        const profileButton = document.querySelector('.right-section .profile-picture')?.closest('.icon-button');
+        const userSidebar = document.getElementById('userSidebar');
+      
+        function toggleUserSidebar(e) {
+          e?.stopPropagation();
+          userSidebar?.classList.toggle('active');
+        }
+      
+        profileButton?.addEventListener('click', toggleUserSidebar);
+      
+        // Close when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!userSidebar?.contains(e.target) && !profileButton?.contains(e.target)) {
+            userSidebar?.classList.remove('active');
+          }
+        });
+      
+        // Logout handler
+        document.querySelector('.user-option[id="logout"]')?.addEventListener('click', (e) => {
+          e.preventDefault();
+          const form = document.createElement('form');
+          form.method = 'post';
+          form.innerHTML = `
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.path }}">
+          `;
+          document.body.appendChild(form);
+          form.submit();
+        });
+      
+        // ====================== Filter Buttons ======================
+        // const items = document.querySelectorAll('.item');
+        const filterButtons = document.querySelectorAll('.filters-scroll-container .filters-container .filter-group .filter-btn');
+      
+        filterButtons?.forEach(btn => {
+          btn.addEventListener('click', function() {
+            filterButtons.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            const filterType = this.textContent;
+            items.forEach(item => {
+              item.style.display = (filterType === 'All' || item.dataset.filter === filterType) 
+                ? 'block' 
+                : 'none';
+            });
+          });
+        });
+      
+        // ====================== Language Change (AJAX) ======================
+        async function changeLanguage(languageCode) {
+          const csrftoken = "{{ csrf_token }}";
+          try {
+            const response = await fetch("{% url 'set_language' %}", {
+              method: "POST",
+              headers: {
+                "X-CSRFToken": csrftoken,
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              body: `language=${languageCode}`,
+            });
+            
+            if (response.redirected) {
+              window.location.href = response.url;
+            } else if (response.ok) {
+              location.reload();
+            } else {
+              alert("Failed to change language. Please try again.");
+            }
+          } catch (error) {
+            console.error("Language change error:", error);
+            alert("There was an issue. Please try again.");
+          }
+        }
+      });
+      
+      // ====================== Standalone Sidebar Menu ======================
+      function sidebarMenu() {
+        const sidebarmenu = document.querySelector(".material-icons-outlined");
+        const sidebar = document.querySelector(".sidebar");
+      
+        if (!sidebarmenu || !sidebar) {
+          console.error("Sidebar elements not found.");
+          return;
+        }
+      
+        sidebar.style.transform = "translateX(-100%)";
+      
+        sidebarmenu.addEventListener("click", () => {
+            const isHidden = sidebar.style.transform === "translateX(-100%)";
+            sidebar.style.transform = isHidden ? "translateX(0%)" : "translateX(-100%)";
+          });          
+      
+        // Close when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!sidebarmenu.contains(e.target) && !sidebar.contains(e.target)) {
+            sidebar.style.transform = "translateX(-100%)";
+          }
+        });
+      }
+      
+      sidebarMenu();
+
+//Filter continer section
+
+      const scrollLeft = document.getElementById('scrollLeft');
+      const scrollRight = document.getElementById('scrollRight');
+      const filtersContainer = document.querySelector('.filters-container');
+      
+      const scrollStep = 200;
+      
+      // Function to update button visibility
+      function updateScrollButtons() {
+          const scrollLeftValue = filtersContainer.scrollLeft;
+          const maxScrollLeft = filtersContainer.scrollWidth - filtersContainer.clientWidth;
+      
+          // Hide both buttons if no scrolling is needed
+          if (maxScrollLeft <= 1) {
+              scrollLeft.style.display = 'none';
+              scrollRight.style.display = 'none';
+          } else {
+              // Show/hide based on position
+              scrollLeft.style.display = scrollLeftValue <= 0 ? 'none' : 'block';
+              scrollRight.style.display = scrollLeftValue >= maxScrollLeft ? 'none' : 'block';
+          }
+      }
+      
+      // Add event listeners
+      scrollLeft.addEventListener('click', () => {
+          filtersContainer.scrollBy({
+              left: -scrollStep,
+              behavior: 'smooth'
+          });
+      });
+      
+      scrollRight.addEventListener('click', () => {
+          filtersContainer.scrollBy({
+              left: scrollStep,
+              behavior: 'smooth'
+          });
+      });
+      
+      // Listen to scroll to update button visibility
+      filtersContainer.addEventListener('scroll', updateScrollButtons);
+      
+      // Run once on page load
+      window.addEventListener('load', updateScrollButtons);
+      window.addEventListener('resize', updateScrollButtons); // Optional: handle resizing
+
+//end filter continer section?
+
+
+
+
+    // Update button states
+    const updateScrollControls = () => {
+        const { scrollLeft, scrollWidth, clientWidth } = filtersContainer;
+        scrollLeftBtn.style.visibility = scrollLeft > 0 ? 'visible' : 'hidden';
+        scrollRightBtn.style.visibility = scrollLeft < scrollWidth - clientWidth ? 'visible' : 'hidden';
+    };
+
+    // Event listeners
+    filtersContainer.addEventListener('scroll', updateScrollControls);
+    window.addEventListener('resize', updateScrollControls);
+
+    // Initial state
+    updateScrollControls();
+
+
+
+    
+    
+    // For different platforms:
+    class CustomAIAssistant extends AIAssistant {
+        constructor(apiEndpoint, customConfig) {
+            super(apiEndpoint);
+            this.customConfig = customConfig;
+        }
+    
+        async fetchAIResponse(question) {
+            // Custom implementation
+            const response = await fetch(this.apiEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': "{{ csrf_token }}",
+                    ...this.customConfig.headers
+                },
+                body: JSON.stringify({
+                    question,
+                    ...this.customConfig.body
+                })
+            });
+            
+            return super.fetchAIResponse(question);
+        }
+    }
+
+</script>
+
+</body>
+</html>

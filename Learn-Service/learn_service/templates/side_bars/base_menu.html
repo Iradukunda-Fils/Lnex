@@ -1,0 +1,121 @@
+{% load i18n %}
+{% load static %}
+
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-content">
+        <div class="sidebar-section" style="background-color: rgba(0,0,0,0.05); border-radius: 10px;">
+            <a href="#" class="sidebar-link" style="background-color: rgba(0,0,0,0.05)">
+                <span class="material-icons-outlined">home</span>
+                {% trans "Home" %}
+            </a>
+            <a href="#" class="sidebar-link">
+                <span class="material-icons-outlined">book</span>
+                {% trans "My Courses" %}
+            </a>
+            <a href="#" class="sidebar-link">
+                <span class="material-icons-outlined">tasks</span>
+                {% trans "Tasks" %}
+            </a>
+            <a href="#" class="sidebar-link">
+                <span class="material-icons-outlined"></span>
+                {% trans "Communication" %}
+            </a>
+            <a href="#" class="sidebar-link">
+                <span class="material-icons-outlined">analytics</span>
+                {% trans "progress" %}
+            </a>
+            <a href="#" class="sidebar-link">
+                <span class="material-icons-outlined">My Courses</span>
+                {% trans "rogress" %}
+            </a>
+            <a href="#" class="sidebar-link">
+                <span class="material-icons-outlined">My Courses</span>
+                {% trans "Courses" %}
+            </a>
+            <div class="sidebar-dropdown">
+                <a href="#" class="sidebar-link dropdown-toggle">
+                    <span class="material-icons-outlined">{% trans "school" %}</span>
+                    {% trans "Learning Paths" %}
+                </a>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item">Cloud Architecture Track</a>
+                    <a href="#" class="dropdown-item">AI Fundamentals Series</a>
+                    <a href="#" class="dropdown-item">Full-Stack Development</a>
+                </div>
+            </div>
+
+            <div class="sidebar-dropdown">
+                <a href="#" class="sidebar-link dropdown-toggle">
+                    <span class="material-icons-outlined">video_library</span>
+                    {% trans "Skill Builders" %}
+                </a>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item">o Python Mastery</a>
+                    <a href="#" class="dropdown-item">o DevOps Essentials</a>
+                    <a href="#" class="dropdown-item">o Data Visualization</a>
+                </div>
+            </div>
+
+            <div class="sidebar-dropdown">
+                <a href="#" class="sidebar-link dropdown-toggle">
+                    <span class="material-icons-outlined">assignment</span>
+                    {% trans "Achievements" %}
+                </a>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item">Certifications</a>
+                    <a href="#" class="dropdown-item">Badges</a>
+                    <a href="#" class="dropdown-item">Skill Metrics</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <h3 class="sidebar-title">{% trans "Knowledge Hub" %}</h3>
+            <div class="sidebar-dropdown">
+                <a href="#" class="sidebar-link dropdown-toggle">
+                    <span class="material-icons-outlined">article</span>
+                    {% trans "Tech Archives" %}
+                </a>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item">Cloud Computing</a>
+                    <a href="#" class="dropdown-item">Machine Learning</a>
+                    <a href="#" class="dropdown-item">Cybersecurity</a>
+                </div>
+            </div>
+
+            <div class="sidebar-dropdown">
+                <a href="#" class="sidebar-link dropdown-toggle">
+                    <span class="material-icons-outlined">forum</span>
+                    {% trans "Collaborate" %}
+                </a>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item">Study Groups</a>
+                    <a href="#" class="dropdown-item">Code Reviews</a>
+                    <a href="#" class="dropdown-item">Project Hub</a>
+                </div>
+            </div>
+
+            <div class="sidebar-dropdown">
+                <a href="#" class="sidebar-link dropdown-toggle">
+                    <span class="material-icons-outlined">help</span>
+                    {% trans "Support Center" %}
+                </a>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item">Technical Assistance</a>
+                    <a href="#" class="dropdown-item">Course Guidance</a>
+                    <a href="#" class="dropdown-item">FAQ Database</a>
+                </div>
+            </div>
+            <!-- Add this new section at the end -->
+            <div class="sidebar-section" >
+                <div class="sidebar-dropdown"style="background-color: #000;">                               
+                    <a href="#" class="sidebar-link" id="aiAssistantButton" style="color:whitesmoke">
+                        <span class="material-icons-outlined" style="color:whitesmoke">smart_toy</span>
+                        {% trans "Ask AI Assistant" %}
+                        <span class="material-icons-outlined" style="float: right; font-size: 20px; color:whitesmoke">auto_awesome</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
