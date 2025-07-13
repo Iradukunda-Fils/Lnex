@@ -25,7 +25,7 @@ COPY ./pyproject.toml ./uv.lock ./
 RUN uv sync 
 
 # Copy the application source code
-COPY ./micro_service .
+COPY ./communication_service .
 
 # Collect static files for production
 RUN uv run manage.py collectstatic --noinput && \
@@ -57,7 +57,7 @@ USER appuser
 EXPOSE 8000
 
 # Start the application using Gunicorn with Uvicorn worker
-CMD ["/app/.venv/bin/gunicorn", "-k", "uvicorn.workers.UvicornWorker", "micro_service.asgi:application", "--bind", "0.0.0.0:8000", "--workers", "4"]
+CMD ["/app/.venv/bin/gunicorn", "-k", "uvicorn.workers.UvicornWorker", "communication_service.asgi:application", "--bind", "0.0.0.0:8000", "--workers", "4"]
 
 # Healthcheck to ensure the service is running
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s \

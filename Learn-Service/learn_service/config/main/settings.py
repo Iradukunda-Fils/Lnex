@@ -240,7 +240,7 @@ STATICFILES_DIRS = [BASE_DIR / "dev_static/"]
 
 STATIC_ROOT = BASE_DIR / "sys_static/learn"
 
-MEDIA_URL = '/learn_files/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = create_dir(BASE_DIR / "sys_media/media/learn")
 
 FILE_UPLOAD_TEMP_DIR = create_dir(BASE_DIR / 'sys_media'/ 'media' / 'temp')

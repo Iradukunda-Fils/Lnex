@@ -3,23 +3,23 @@ version: '3.9'
 services:
 
 # ========================================================> MICRO SERVICE MANAGER <================================================ #
-  micro:
+  lnex_micro:
     build:
       context: ../Micro-Service
       dockerfile: ../Micro-Service/micro_service/config/docker/Dockerfile
     image: lnex-micro-service:v_1.0
-    container_name: lnex-auth-service
+    container_name: lnex-micro-service
     expose:
       - "8000"
     depends_on:
-      - micro_db
+      - lnex_micro_db
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
       timeout: 10s
       retries: 3
     volumes:
-      - lnex_static_volume:app/system_static/micro:rw
+      - lnex_static_volume:app/sys_static/micro:rw
       - lnex_media_volume:app/sys_media/media/micro:rw
     networks:
       - lnex_shared_network
@@ -27,7 +27,7 @@ services:
    
     # DATABASE
 
-  micro_db:
+  lnex_micro_db:
     image: postgres:17
     container_name: lnex-micro-db
     env_file:
@@ -47,7 +47,7 @@ services:
       - lnex_micro_db_network
 
 # ========================================================> AUTHENTICATION SERVICE <================================================ #
-  auth:
+  lnex_auth:
     build:
       context: ../Auth-Service
       dockerfile: ../Auth-Service/auth_service/config/docker/Dockerfile
@@ -56,14 +56,14 @@ services:
     expose:
       - "8000"
     depends_on:
-      - auth_db
+      - lnex_auth_db
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
       timeout: 10s
       retries: 3
     volumes:
-      - lnex_static_volume:app/system_static/authentication:rw
+      - lnex_static_volume:app/sys_static/authentication:rw
       - lnex_media_volume:app/sys_media/media/authentication:rw
     networks:
       - lnex_shared_network
@@ -71,7 +71,7 @@ services:
    
     # DATABASE
 
-  auth_db:
+  lnex_auth_db:
     image: postgres:17
     container_name: lnex-auth-db
     env_file:
@@ -90,9 +90,9 @@ services:
     networks:
       - lnex_auth_db_network
     
-# =========================================================> LEARNING SERVICE <===================================================== #
+# =========================================================> LEARN SERVICE <===================================================== #
   
-  learn:
+  lnex_learn:
     build:
       context: ../Learn-Service
       dockerfile: ../Learn-Service/learn_service/config/docker/Dockerfile
@@ -101,7 +101,7 @@ services:
     expose:
       - "8000"
     depends_on:
-      - learn_db
+      - lnex_learn_db
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
@@ -116,7 +116,7 @@ services:
 
       # DATABASE
 
-  learn_db:
+  lnex_learn_db:
     image: postgres:17
     container_name: lnex-learn-db
     env_file:
@@ -137,7 +137,7 @@ services:
 
 # =========================================================> PAYMENT SERVICE <====================================================== #
 
-  payment:
+  lnex_payment:
     build: 
       context: ../Payment-Service
       dockerfile: ../Payment-Service/payment_service/config/docker/Dockerfile
@@ -146,7 +146,7 @@ services:
     expose:
       - "8000"
     depends_on:
-      - payment_db
+      - lnex_payment_db
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
@@ -161,7 +161,7 @@ services:
 
     # DATABASE
 
-  payment_db:
+  lnex_payment_db:
     image: postgres:17
     container_name: lnex-payment-db
     env_file:
@@ -180,50 +180,50 @@ services:
     networks:
       - lnex_payment_db_network
 
-# =========================================================> MAILING SERVICE <====================================================== #
+# =========================================================> COMMUNICATION SERVICE <====================================================== #
 
-  mailing:
+  lnex_communication:
     build: 
-      context: ../Mailing-Service
-      dockerfile: ../Mailing-Service/mailing_service/config/docker/Dockerfile
-    image: lnex-mailing-service:v_1.0
-    container_name: lnex-mailing-service
+      context: ../Communication-Service
+      dockerfile: ../Communication-Service/communication_service/config/docker/Dockerfile
+    image: lnex-communication-service:v_1.0
+    container_name: lnex-communication-service
     expose:
       - "8000"
     depends_on:
-      - mailing_db
+      - lnex_communication_db
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
       timeout: 10s
       retries: 3
     volumes:
-      - lnex_static_volume:app/sys_static/mailing:rw
-      - lnex_media_volume:app/sys_media/media/mailing:rw
+      - lnex_static_volume:app/sys_static/communication:rw
+      - lnex_media_volume:app/sys_media/media/communication:rw
     networks:
       - lnex_shared_network
-      - lnex_mailing_db_network
+      - lnex_communication_db_network
 
     # DATABASE
 
-  mailing_db:
+  lnex_communication_db:
     image: postgres:17
-    container_name: lnex-mailing-db
+    container_name: lnex-communication-db
     env_file:
-      - ${D_MAILING_DB_PATH}
+      - ${D_COMMUNICATION_DB_PATH}
     ports:
       - "3333:5432"
     volumes:
-      - lnex_mailing_db_data:/var/lib/postgresql/data:rw
-      - ./init/mailing:/docker-entrypoint-initdb.d
+      - lnex_communication_db_data:/var/lib/postgresql/data:rw
+      - ./init/communication:/docker-entrypoint-initdb.d
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "mailing_user", "-p", "5432"]
+      test: ["CMD", "pg_isready", "-U", "communication_user", "-p", "5432"]
       interval: 1m30s
       timeout: 10s
       retries: 5
       start_period: 30s
     networks:
-      - lnex_mailing_db_network
+      - lnex_communication_db_network
 
 # ===============================================================> MANAGE SERVICES <================================================ #
 
@@ -232,14 +232,14 @@ volumes:
   lnex_auth_db_data:
   lnex_learn_db_data:
   lnex_payment_db_data:
-  lnex_mailing_db_data:
+  lnex_communication_db_data:
   lnex_static_volume:
   lnex_media_volume:
       
 networks:
-  lnex_micro_network:
-    driver: bridge
   lnex_shared_network:
+    driver: bridge
+  lnex_micro_db_network:
     driver: bridge
   lnex_auth_db_network:
     driver: bridge  
@@ -247,7 +247,7 @@ networks:
     driver: bridge
   lnex_payment_db_network:
     driver: bridge
-  lnex_mailing_db_network:
+  lnex_communication_db_network:
     driver: bridge
 
     

@@ -28,7 +28,7 @@ TEMPLATES = (
     BASE_DIR / "templates",
 )
 
-LOG = create_dir(BASE_DIR / "../../" / "configs/logs/services/payment_service")
+LOG = create_dir(BASE_DIR / "../../" / "configs/logs/services/communication_service")
 
 
 
@@ -127,7 +127,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'mailing_service.urls'
+ROOT_URLCONF = 'communication_service.urls'
 
 TEMPLATES = [
     {
@@ -146,7 +146,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'mailing_service.wsgi.application'
+WSGI_APPLICATION = 'communication_service.wsgi.application'
 
 
 # Database
@@ -220,10 +220,10 @@ for code, _ in LANGUAGES:
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "dev_static/"]
-STATIC_ROOT = BASE_DIR / "sys_static/mailing"
+STATIC_ROOT = BASE_DIR / "sys_static/communication"
 
-MEDIA_URL = '/learn_files/'
-MEDIA_ROOT = create_dir(BASE_DIR / "sys_media/media/mailing")
+MEDIA_URL = '/media/'
+MEDIA_ROOT = create_dir(BASE_DIR / "sys_media/media/communication")
 
 FILE_UPLOAD_TEMP_DIR = create_dir(BASE_DIR / 'sys_media'/ 'media' / 'temp')
 

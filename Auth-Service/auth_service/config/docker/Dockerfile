@@ -1,29 +1,64 @@
-FROM python:3.11 AS dev_stage
+# ----------- BUILD STAGE -----------
+FROM python:3.13.3-slim-bookworm AS build
 
-# Set the working directory
-WORKDIR /d_app
-# Copy the requirements file into the container
-COPY requirements.txt ../../../
-# Install the dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-# Copy the rest of the application code into the container
+# Set environment variables for Python and apt
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    DEBIAN_FRONTEND=noninteractive \
+    PATH="/root/.local/bin:$PATH"
 
-RUN python manage.py collectstatic --noinput
+# Install system dependencies and uv package manager
+RUN apt-get update && \
+    apt-get install --no-install-recommends --no-install-suggests -y \
+    curl build-essential ca-certificates && \
+    curl -LsSf https://astral.sh/uv/install.sh | sh && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-COPY ../../ .
+# Set the working directory for the build stage
+WORKDIR /app
 
-FROM python:3.11-slim AS prod_stage
+# Copy dependency files to leverage Docker cache
+COPY ./pyproject.toml ./uv.lock ./
 
-# Set the working directory
-WORKDIR /p_app
+# Install Python dependencies using uv
+RUN uv sync 
 
-COPY --from=dev_stage /d_app /p_app
+# Copy the application source code
+COPY ./auth_service .
 
-#Install python the dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Collect static files for production
+RUN uv run manage.py collectstatic --noinput && \
+    chmod -R 755 /app
 
-# Expose the port the app runs on
+
+# ----------- RUNTIME STAGE -----------
+FROM python:3.13.3-slim-bookworm AS runtime
+
+# Set environment variables for Python
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PATH="/app/.venv/bin:$PATH"
+
+# Create a non-root user and group for running the app
+RUN groupadd -r appgroup && \
+    useradd -rg appgroup -m -d /home/appuser -s /usr/sbin/nologin appuser 
+
+# Set the working directory for the runtime stage
+WORKDIR /app
+
+# Copy built application and dependencies from build stage, set ownership
+COPY --chown=appuser:appgroup --from=build /app .
+
+# Switch to the non-root user
+USER appuser
+
+# Expose the application port
 EXPOSE 8000
 
-ENTRYPOINT [ "" ]
-CMD ["uvicorn", "main:app", "--host", "", "--port", "8000", "--reload", "--reload-dir", "/app"]
+# Start the application using Gunicorn with Uvicorn worker
+CMD ["/app/.venv/bin/gunicorn", "-k", "uvicorn.workers.UvicornWorker", "auth_service.asgi:application", "--bind", "0.0.0.0:8000", "--workers", "4"]
+
+# Healthcheck to ensure the service is running
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s \
+    CMD curl -f http://localhost:8000/ || exit 1    

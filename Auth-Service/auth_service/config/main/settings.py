@@ -236,7 +236,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "dev_static/"]
 
-STATIC_ROOT = "system_static/authentication"
+STATIC_ROOT = "sys_static/authentication"
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = "sys_media/media/authentication"
