@@ -19,10 +19,10 @@ on:
 
   
   
-  # env:
-  # REGISTRY: docker.io
-  # IMAGE_NAME_PREFIX: your-dockerhub-username/lnex
-  # DOCKER_COMPOSE_FILE: ./configs/docker-compose.yaml
+  env:
+  REGISTRY: docker.io
+  IMAGE_NAME_PREFIX: https://github.com/Iradukunda-Fils/Lnex/
+  DOCKER_COMPOSE_FILE: ./configs/docker-compose.yaml
 
 jobs:
   build-and-test:
