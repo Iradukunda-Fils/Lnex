@@ -23,7 +23,7 @@ Lnex/
 ├── Learn-Service/
 ├── Media-Service/
 ├── Payment-Service/
-├── Micro-Service/ # Service registry and manager
+├── Service-Registry/ # Service registry and manager
 └── configs/
 ├── docker-compose.yaml # Main orchestrator
 ├── .env # Global env vars
@@ -47,9 +47,9 @@ cd lnex/configs
 2. Configure .env Files
 Ensure all environment files exist in the correct paths. The docker-compose.yaml references service-specific and database-specific .env files.
 
-Example (Micro-Service DB env):
+Example (Service-Registry DB env):
 
-../Micro-Service/micro_service/config/ENV/development/db.env
+../Service-Registry/registry/config/ENV/development/db.env
 
 Each service includes:
 

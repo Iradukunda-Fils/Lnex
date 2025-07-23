@@ -3,24 +3,24 @@ version: '3.9'
 services:
 
 # ========================================================> MICRO SERVICE MANAGER <================================================ #
-  lnex_micro:
+  lnex_registry:
     build:
-      context: ../Micro-Service
-      dockerfile: ../Micro-Service/micro_service/config/docker/Dockerfile
-    image: lnex-micro-service:v_1.0
-    container_name: lnex-micro-service
+      context: ../Service-Registry
+      dockerfile: ../Service-Registry/registry/config/docker/Dockerfile
+    image: lnex-service-registry:v_1.0
+    container_name: lnex-service-registry
     expose:
       - "8000"
     depends_on:
-      - lnex_micro_db
+      - lnex_registry_db
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
       timeout: 10s
       retries: 3
     volumes:
-      - lnex_static_volume:app/sys_static/micro:rw
-      - lnex_media_volume:app/sys_media/media/micro:rw
+      - lnex_static_volume:app/sys_static/registry:rw
+      - lnex_media_volume:app/sys_media/media/registry:rw
     networks:
       - lnex_shared_network
       - lnex_micro_db_network

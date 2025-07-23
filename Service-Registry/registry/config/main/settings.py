@@ -127,7 +127,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'micro_service.urls'
+ROOT_URLCONF = 'registry.urls'
 
 TEMPLATES = [
     {
@@ -146,7 +146,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'micro_service.wsgi.application'
+WSGI_APPLICATION = 'registry.wsgi.application'
 
 
 # Database
@@ -219,10 +219,10 @@ for code, _ in LANGUAGES:
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "dev_static/"]
-STATIC_ROOT = BASE_DIR / "sys_static/micro"
+STATIC_ROOT = BASE_DIR / "sys_static/registry"
 
 MEDIA_URL = '/learn_files/'
-MEDIA_ROOT = create_dir(BASE_DIR / "sys_media/media/micro")
+MEDIA_ROOT = create_dir(BASE_DIR / "sys_media/media/registry")
 
 FILE_UPLOAD_TEMP_DIR = create_dir(BASE_DIR / 'sys_media'/ 'media' / 'temp')
 
